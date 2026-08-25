@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Amplitude — Gestão de reabilitação esportiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300806B'/%3E%3Cpath d='M6 17h4l3-8 5 15 3-8h5' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Gloock&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;background:#F4F7F8}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--verde);outline-offset:2px;border-radius:3px}
+
+:root{
+  --tela:#F4F7F8;--sup:#FFFFFF;--linha:#E2E9EC;--linha-forte:#CBD6DA;
+  --t1:#0A1F1C;--t2:#5A6E72;--t3:#8C9EA3;
+  --verde:#00806B;--verde-fraco:#E4F2EF;--verde-escuro:#04564A;
+  --laranja:#D9603C;--laranja-fraco:#FCEDE8;
+  --ambar:#C98A16;--ambar-fraco:#FDF3DE;
+  --azul:#2A62CE;--azul-fraco:#E9F0FC;
+  --r:10px;
+  --ui:"Inter",-apple-system,system-ui,"Segoe UI",sans-serif;
+}
+#sys{font-family:var(--ui);color:var(--t1);background:var(--tela);min-height:100vh;font-size:14px}
+#sys.foi{display:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+.wrap{display:flex;min-height:100vh}
+.lateral{width:232px;flex:none;background:var(--sup);border-right:1px solid var(--linha);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.marca{padding:18px 18px 16px;display:flex;align-items:center;gap:10px}
+.marca-i{width:30px;height:30px;border-radius:8px;flex:none;background:linear-gradient(145deg,var(--verde),var(--verde-escuro));display:grid;place-items:center}
+.marca-i svg{width:16px;height:16px}
+.marca-t{font-weight:700;font-size:15px;letter-spacing:-.025em;line-height:1}
+.marca-s{font-size:10px;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.menu{padding:6px 10px;display:flex;flex-direction:column;gap:1px;flex:1;overflow-y:auto}
+.menu-r{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:14px 8px 6px}
+.mi{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;font-size:13.5px;font-weight:500;color:var(--t2);width:100%;text-align:left;transition:background .14s,color .14s}
+.mi:hover{background:var(--tela);color:var(--t1)}
+.mi.on{background:var(--verde-fraco);color:var(--verde-escuro);font-weight:600}
+.mi svg{width:16px;height:16px;flex:none;opacity:.85}
+.mi .pino{margin-left:auto;font-size:10px;font-weight:700;background:var(--laranja);color:#fff;border-radius:20px;padding:2px 6px;line-height:1.4}
+.eu{border-top:1px solid var(--linha);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.av{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--azul-fraco);color:var(--azul);font-size:11px;font-weight:700}
+.eu-n{font-size:12.5px;font-weight:600;line-height:1.25}
+.eu-f{font-size:11px;color:var(--t3)}
+
+.principal{flex:1;min-width:0;display:flex;flex-direction:column}
+.topo{background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--linha);padding:0 22px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.migalha{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--t3);min-width:0;overflow:hidden;white-space:nowrap}
+.migalha b{color:var(--t1);font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.migalha span{opacity:.5;flex:none}
+.busca{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--tela);border:1px solid var(--linha);border-radius:7px;padding:7px 11px;width:210px;color:var(--t3);font-size:12.5px;transition:border-color .15s;flex:none}
+.busca:hover{border-color:var(--linha-forte)}
+.busca svg{width:14px;height:14px;flex:none}
+.busca kbd{margin-left:auto;font-size:10px;border:1px solid var(--linha-forte);border-radius:4px;padding:1px 5px;font-family:inherit}
+.ib{width:32px;height:32px;border-radius:7px;display:grid;place-items:center;color:var(--t2);position:relative;transition:background .14s;flex:none}
+.ib:hover{background:var(--tela)}
+.ib svg{width:16px;height:16px}
+.ib .dot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--laranja);border:1.5px solid var(--sup)}
+.conteudo{padding:22px;max-width:1120px;width:100%;margin:0 auto;flex:1}
+
+.dd{position:absolute;top:48px;right:14px;width:min(320px,calc(100vw - 28px));background:var(--sup);border:1px solid var(--linha);border-radius:12px;box-shadow:0 16px 44px rgba(10,31,28,.16);z-index:30;overflow:hidden;opacity:0;transform:translateY(-6px) scale(.98);pointer-events:none;transition:all .2s cubic-bezier(.22,1,.36,1);transform-origin:top right}
+.dd.on{opacity:1;transform:none;pointer-events:auto}
+.dd-c{padding:12px 14px;border-bottom:1px solid var(--linha);display:flex;align-items:center}
+.dd-c b{font-size:12.5px;font-weight:600}
+.dd-c i{margin-left:auto;font-size:11px;color:var(--t3);font-style:normal}
+.dd-i{display:flex;gap:11px;padding:11px 14px;border-bottom:1px solid var(--linha);width:100%;text-align:left;transition:background .12s}
+.dd-i:last-child{border-bottom:none}
+.dd-i:hover{background:var(--tela)}
+.dd-p{width:7px;height:7px;border-radius:50%;flex:none;margin-top:5px}
+.dd-t{font-size:12.5px;font-weight:500;line-height:1.4;display:block}
+.dd-d{font-size:11.5px;color:var(--t3);margin-top:2px;display:block}
+
+.btn{background:var(--verde);color:#fff;border-radius:7px;font-size:13px;font-weight:600;padding:10px 17px;transition:transform .14s,box-shadow .14s,background .14s;white-space:nowrap;font-family:var(--ui)}
+.btn:hover{background:var(--verde-escuro);transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.16)}
+.btn:disabled{opacity:.55;transform:none;box-shadow:none;cursor:default}
+.btn-b{background:transparent;border:1px solid var(--linha-forte);color:var(--t2)}
+.btn-b:hover{background:var(--tela);color:var(--t1);border-color:var(--t3);box-shadow:none}
+
+.cab{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.cab-t{font-size:20px;font-weight:600;letter-spacing:-.03em;line-height:1.2}
+.cab-s{font-size:13px;color:var(--t2);margin-top:4px}
+.cab-a{margin-left:auto;display:flex;gap:8px}
+.cab-a .btn{font-size:12.5px;padding:9px 15px}
+
+.grade{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g21{grid-template-columns:1.65fr 1fr}
+.cart{background:var(--sup);border:1px solid var(--linha);border-radius:var(--r);padding:16px;position:relative}
+.cc{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.ct{font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.cd{font-size:11.5px;color:var(--t3);margin-top:2px;line-height:1.4}
+.ca{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--verde);white-space:nowrap}
+.ca:hover{text-decoration:underline}
+.kr{font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t3)}
+.kv{font-size:27px;font-weight:600;letter-spacing:-.035em;margin:7px 0 4px;line-height:1}
+.kv u{font-size:13px;font-weight:500;color:var(--t3);text-decoration:none;margin-left:2px}
+.kn{font-size:11.5px;color:var(--t2);display:flex;align-items:center;gap:5px}
+.seta{font-size:10px;font-weight:700}
+.sobe{color:var(--verde)}
+.selo{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap;display:inline-block}
+.s-verde{background:var(--verde-fraco);color:var(--verde-escuro)}
+.s-ambar{background:var(--ambar-fraco);color:#8A5E08}
+.s-laranja{background:var(--laranja-fraco);color:#A83C1C}
+.s-azul{background:var(--azul-fraco);color:var(--azul)}
+.s-cinza{background:var(--tela);color:var(--t2)}
+
+.tab{width:100%;border-collapse:collapse}
+.tab th{text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:0 10px 9px;border-bottom:1px solid var(--linha)}
+.tab td{padding:11px 10px;border-bottom:1px solid var(--linha);font-size:13px;vertical-align:middle}
+.tab tr:last-child td{border-bottom:none}
+.tab tbody tr{transition:background .12s;cursor:pointer}
+.tab tbody tr:hover{background:var(--tela)}
+.pes{display:flex;align-items:center;gap:10px}
+.pes-a{width:32px;height:32px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--verde-fraco);color:var(--verde-escuro)}
+.pes-n{font-weight:600;font-size:13px;line-height:1.3}
+.pes-m{font-size:11.5px;color:var(--t3)}
+.barra{height:5px;border-radius:3px;background:var(--linha);overflow:hidden;min-width:64px}
+.barra i{display:block;height:100%;border-radius:3px;background:var(--verde)}
+
+.svgr{width:100%;height:auto;display:block;overflow:visible}
+.traco{fill:none;stroke-width:2.25;stroke-linecap:round;stroke-linejoin:round}
+.desenha{stroke-dasharray:1400;stroke-dashoffset:1400;animation:risca 1.5s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes risca{to{stroke-dashoffset:0}}
+.malha{stroke:var(--linha);stroke-width:1}
+.et{font-size:9px;fill:var(--t3);font-family:"JetBrains Mono",monospace}
+.leg{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+.leg span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--t2)}
+.leg i{width:9px;height:9px;border-radius:2px;flex:none}
+.anelc{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.aneln{font-size:30px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.aneln u{font-size:13px;color:var(--t3);text-decoration:none;font-weight:500}
+
+.crit{display:flex;flex-direction:column}
+.crl{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--linha)}
+.crl:last-child{border-bottom:none}
+.cri{width:19px;height:19px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:10px;font-weight:700;color:#fff}
+.crn{font-size:12.5px;font-weight:500;flex:1;min-width:0}
+.crv{font-size:12px;font-weight:600}
+.cra{font-size:11px;color:var(--t3);margin-left:6px;font-weight:400}
+
+.lista{list-style:none}
+.li{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--linha);width:100%;text-align:left}
+.lista li:last-child .li{border-bottom:none}
+.li.clic{cursor:pointer;transition:background .12s;border-radius:6px;padding-left:8px;padding-right:8px;margin:0 -8px}
+.li.clic:hover{background:var(--tela)}
+.lim{width:7px;height:7px;border-radius:50%;background:var(--verde);flex:none}
+.lin{font-size:13px;font-weight:500;line-height:1.35;display:block}
+.lid{font-size:11.5px;color:var(--t3);margin-top:1px;display:block}
+.liv{margin-left:auto;font-size:11.5px;color:var(--t2);white-space:nowrap;text-align:right}
+
+.fases{display:flex;gap:5px;margin-bottom:10px}
+.fase{flex:1;height:6px;border-radius:3px;background:var(--linha);position:relative;overflow:hidden}
+.fase.ok{background:var(--verde)}
+.fase.agora{background:var(--verde-fraco)}
+.fase.agora::after{content:"";position:absolute;inset:0;width:55%;background:var(--verde);border-radius:3px}
+
+.tl{position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1.5px;background:var(--linha)}
+.tli{position:relative;padding-bottom:16px}
+.tli:last-child{padding-bottom:0}
+.tli::before{content:"";position:absolute;left:-21px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--sup);border:2.5px solid var(--linha-forte)}
+.tli.mk::before{border-color:var(--verde);background:var(--verde)}
+.tld{font-size:10.5px;color:var(--t3);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.tlt{font-size:13px;font-weight:600;margin:2px 0}
+.tlp{font-size:12px;color:var(--t2);line-height:1.5}
+
+.ag{display:flex;flex-direction:column}
+.agl{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--linha);align-items:center;width:100%;text-align:left;transition:background .12s}
+.agl:last-child{border-bottom:none}
+.agl:hover{background:var(--tela)}
+.agh{font-size:12.5px;font-weight:600;color:var(--t2);width:50px;flex:none}
+.agb{width:3px;align-self:stretch;min-height:34px;border-radius:2px;flex:none}
+.agn{font-size:13.5px;font-weight:600;display:block}
+.agd{font-size:11.5px;color:var(--t3);margin-top:2px;display:block}
+.agv{margin-left:auto;font-size:11.5px;color:var(--t2);white-space:nowrap}
+
+.sk{background:linear-gradient(90deg,var(--linha) 25%,#EDF2F4 50%,var(--linha) 75%);background-size:200% 100%;animation:brilha 1.3s infinite;border-radius:5px}
+@keyframes brilha{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.vazio{text-align:center;padding:34px 20px;color:var(--t3)}
+.vazio svg{width:34px;height:34px;margin-bottom:12px;opacity:.45}
+.vazio p{font-size:13px;line-height:1.5}
+
+.veu{position:fixed;inset:0;background:rgba(6,20,18,.58);backdrop-filter:blur(3px);z-index:80;opacity:0;pointer-events:none;transition:opacity .3s}
+.veu.on{opacity:1;pointer-events:auto}
+
+.mdb{position:fixed;top:12vh;left:50%;transform:translateX(-50%) scale(.97);width:min(520px,calc(100vw - 28px));background:#FFF;border-radius:14px;z-index:86;box-shadow:0 24px 70px rgba(6,20,18,.3);overflow:hidden;font-family:var(--ui);opacity:0;pointer-events:none;transition:opacity .24s,transform .24s cubic-bezier(.22,1,.36,1)}
+.mdb.on{opacity:1;transform:translateX(-50%) scale(1);pointer-events:auto}
+.mdb-c{display:flex;align-items:center;gap:11px;padding:15px 17px;border-bottom:1px solid var(--linha)}
+.mdb-c svg{width:17px;height:17px;color:var(--t3);flex:none}
+.mdb-c input{flex:1;border:none;outline:none;font-size:15px;background:none;min-width:0}
+.mdb-c input::placeholder{color:var(--t3)}
+.mdb-l{max-height:min(340px,52vh);overflow-y:auto;padding:7px}
+.mdb-i{display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:8px;width:100%;text-align:left;transition:background .12s}
+.mdb-i:hover,.mdb-i.sel{background:var(--verde-fraco)}
+.mdb-p{padding:9px 17px;border-top:1px solid var(--linha);font-size:11px;color:var(--t3);display:flex;gap:14px}
+.mdb-p b{font-weight:500;border:1px solid var(--linha);border-radius:4px;padding:1px 5px}
+
+.painel{position:fixed;top:0;right:0;bottom:0;width:min(452px,100%);background:#FFF;color:var(--t1);font-family:var(--ui);font-size:14px;z-index:81;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .42s cubic-bezier(.32,.72,0,1);box-shadow:-20px 0 60px rgba(6,20,18,.28);overscroll-behavior:contain}
+.painel.on{transform:translateX(0)}
+.pc{padding:17px 20px 13px;border-bottom:1px solid var(--linha);background:#FFF;flex:none}
+.pc1{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.ptag{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;background:var(--verde-fraco);color:var(--verde-escuro);padding:3px 8px;border-radius:4px}
+.px{margin-left:auto;color:var(--t3);width:28px;height:28px;border-radius:6px;display:grid;place-items:center;flex:none}
+.px:hover{background:var(--tela);color:var(--t1)}
+.ptit{font-size:16px;font-weight:600;letter-spacing:-.015em}
+.psub{font-size:12.5px;color:var(--t2);margin-top:3px;line-height:1.5}
+.pprog{display:flex;gap:4px;margin-top:13px}
+.pprog i{flex:1;height:3px;border-radius:2px;background:var(--linha);transition:background .3s}
+.pprog i.ok{background:var(--verde)}
+.pcorpo{flex:1;min-height:0;overflow-y:auto;padding:20px;background:#FFF}
+.passo{animation:sobe .34s cubic-bezier(.22,1,.36,1)}
+@keyframes sobe{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.pnum{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--verde);margin-bottom:14px}
+.campo{margin-bottom:18px}
+.campo:last-child{margin-bottom:0}
+.rot{font-size:11.5px;font-weight:600;color:var(--t2);margin-bottom:7px;display:block}
+
+.eva{display:flex;gap:4px}
+.eva button{flex:1;aspect-ratio:1;border:1px solid var(--linha);border-radius:7px;font-weight:600;font-size:12.5px;color:var(--t2);transition:all .14s;display:grid;place-items:center;min-width:0}
+.eva button:hover{border-color:var(--verde);color:var(--verde)}
+.eva button.on{color:#fff;border-color:transparent}
+.evar{display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-top:7px}
+
+.ops{display:flex;flex-direction:column;gap:7px}
+.op{display:flex;align-items:center;gap:11px;text-align:left;width:100%;border:1px solid var(--linha);border-radius:8px;padding:11px 13px;font-size:13.5px;transition:all .15s;background:#FFF}
+.op:hover{border-color:var(--verde);background:var(--verde-fraco)}
+.op.on{border-color:var(--verde);background:var(--verde-fraco);font-weight:600;color:var(--verde-escuro)}
+.opb{width:17px;height:17px;border-radius:5px;border:1.8px solid var(--linha-forte);flex:none;display:grid;place-items:center;transition:border-color .15s}
+.op.on .opb{border-color:var(--verde)}
+.op.on .opb::after{content:"";width:9px;height:9px;border-radius:1px;background:var(--verde)}
+.op-d{font-size:11.5px;color:var(--t3);font-weight:400;margin-top:1px;display:block}
+
+.num{display:flex;align-items:center;gap:10px}
+.num input{width:100%;border:1px solid var(--linha);border-radius:8px;padding:11px 13px;font-size:14px;outline:none;transition:border-color .15s}
+.num input:focus{border-color:var(--verde);box-shadow:0 0 0 3px var(--verde-fraco)}
+.num span{font-size:13px;color:var(--t3);flex:none}
+
+.txa{width:100%;border:1px solid var(--linha);border-radius:8px;padding:12px;font-size:13.5px;line-height:1.6;min-height:126px;resize:vertical;background:#FFF;outline:none;transition:border-color .15s;font-family:var(--ui)}
+.txa::placeholder{color:var(--t3)}
+.txa:focus{border-color:var(--verde);box-shadow:0 0 0 3px var(--verde-fraco)}
+.cchar{font-size:11px;color:var(--t3);text-align:right;margin-top:6px}
+.pfe{padding:13px 20px calc(13px + env(safe-area-inset-bottom));border-top:1px solid var(--linha);flex:none;display:flex;align-items:center;gap:10px;background:#FFF}
+.pfe .pn{font-size:11.5px;color:var(--t3);margin-right:auto}
+.resumo{background:var(--tela);border-radius:9px;padding:12px 14px}
+.resumo-l{display:flex;gap:10px;padding:6px 0;font-size:12.5px;align-items:baseline}
+.resumo-l b{color:var(--t2);font-weight:500;min-width:104px;flex:none}
+.resumo-l span{color:var(--t1);font-weight:500}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,160%);background:#0A2E28;color:#fff;border-radius:9px;padding:12px 18px;font-family:var(--ui);font-size:13px;font-weight:500;z-index:95;display:flex;align-items:center;gap:10px;transition:transform .4s cubic-bezier(.22,1,.36,1);box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:calc(100vw - 28px)}
+.toast.on{transform:translate(-50%,0)}
+.toast svg{flex:none}
+
+.navmb{display:none;position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-top:1px solid var(--linha);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
+.navmb-in{display:flex;justify-content:space-around}
+.navmb button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:600;color:var(--t3);padding:5px 4px;border-radius:8px;flex:1}
+.navmb button svg{width:19px;height:19px}
+.navmb button.on{color:var(--verde)}
+
+@media(max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}.g21{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .lateral{display:none}.navmb{display:block}
+  .conteudo{padding:14px 13px 84px}.topo{padding:0 13px;height:52px}
+  .busca{display:none}.g4,.g2{grid-template-columns:repeat(2,1fr)}
+  .kv{font-size:22px}.cart{padding:14px}
+  .escmb{display:none}
+  .cab{margin-bottom:14px}.cab-t{font-size:17px}
+  .cab-a{margin-left:0;width:100%}.cab-a .btn{flex:1}
+  .painel{width:100%}
+  .mdb{top:0;left:0;width:100%;height:100%;border-radius:0;transform:translateY(14px)}
+  .mdb.on{transform:none}
+  .mdb-l{max-height:calc(100% - 120px)}
+  .eva button{font-size:11px}
+}
+
+#inter{position:fixed;inset:0;z-index:90;display:none;background:#0B0714;color:#F6EFF4;align-items:center;justify-content:center;padding:30px}
+#inter.on{display:flex}
+#inter::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 50%,rgba(139,79,168,.14),transparent 70%)}
+.itx{font-family:"Newsreader",Georgia,serif;font-weight:200;font-size:clamp(21px,5.4vw,30px);line-height:1.45;text-align:center;max-width:20ch;position:relative}
+.itx span{display:inline-block;opacity:0;filter:blur(7px);transform:translateY(9px);transition:opacity .95s cubic-bezier(.22,1,.36,1),filter .95s,transform .95s}
+.itx span.vem{opacity:1;filter:blur(0);transform:none}
+
+#livro{
+  --papel:#F8F2EE;--tinta:#2B1533;--tinta-2:#6A5670;
+  --lilas:#8B4FA8;--lilas-esc:#5C2E75;--ouro:#D9A441;--amarelo:#FFC800;--verde-l:#16794C;
+  position:fixed;inset:0;z-index:70;display:none;overflow:hidden;
+  background:radial-gradient(90% 70% at 50% 8%,#25123A 0%,transparent 62%),linear-gradient(180deg,#100A1C,#070410);
+  color:var(--papel);font-family:"Newsreader",Georgia,serif;
+  flex-direction:column;align-items:center;justify-content:center;padding:clamp(12px,2.5vw,26px);
+}
+#livro.on{display:flex}
+.capacx{perspective:2200px;position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center}
+.capa{width:min(340px,80vw);aspect-ratio:2/3;position:relative;transform-style:preserve-3d;transform:rotateY(-16deg) rotateX(4deg);cursor:pointer;animation:flutua 6s ease-in-out infinite;will-change:transform,opacity}
+@keyframes flutua{0%,100%{transform:rotateY(-16deg) rotateX(4deg) translateY(0)}50%{transform:rotateY(-13deg) rotateX(3deg) translateY(-11px)}}
+.capa:hover{animation-play-state:paused}
+.capa.abrindo{animation:none;transform-origin:left center;transform:rotateY(-114deg);opacity:0;transition:transform .58s cubic-bezier(.5,.05,.24,1),opacity .2s .34s}
+.capaf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:3px 8px 8px 3px;background:linear-gradient(150deg,#5C2E75,#3B1B4E 48%,#2A1238);box-shadow:inset 0 0 0 1px rgba(217,164,65,.16),inset -13px 0 22px -14px rgba(0,0,0,.6),24px 30px 70px rgba(0,0,0,.62);padding:clamp(24px,6vw,36px);display:flex;flex-direction:column;overflow:hidden}
+.miolo.entra .palco{animation:chega .5s cubic-bezier(.22,1,.36,1)}
+@keyframes chega{from{opacity:0;transform:scale(.965)}to{opacity:1;transform:none}}
+.capaf::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:8px;background:linear-gradient(90deg,rgba(0,0,0,.34),transparent)}
+.capaf::after{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 1px,transparent 1px 3px)}
+.capam{position:absolute;inset:clamp(14px,3.6vw,20px) clamp(14px,3.6vw,20px) clamp(14px,3.6vw,20px) clamp(24px,5vw,32px);border:1px solid rgba(217,164,65,.3);border-radius:2px;pointer-events:none}
+.capac{font-family:"Barlow Condensed",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(217,164,65,.72);position:relative;z-index:2}
+.capameio{margin:auto 0;position:relative;z-index:2}
+.capan{font-family:"Gloock",Georgia,serif;font-size:clamp(34px,9.6vw,46px);line-height:.94;letter-spacing:-.025em;color:#F3E4C8;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+.capao{display:flex;align-items:center;gap:9px;margin:15px 0}
+.capao i{height:1px;flex:1;background:rgba(217,164,65,.42)}
+.capao b{color:var(--ouro);font-size:11px;line-height:1}
+.capas{font-size:clamp(13px,3.4vw,15px);font-style:italic;font-weight:300;color:rgba(243,228,200,.72);line-height:1.45}
+.capab{font-family:"Barlow Condensed",sans-serif;font-size:10.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(243,228,200,.5);position:relative;z-index:2}
+.capad{margin-top:22px;font-family:"Barlow Condensed",sans-serif;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(248,242,238,.42);text-align:center;animation:respira 2.6s ease-in-out infinite}
+@keyframes respira{0%,100%{opacity:.4}50%{opacity:.95}}
+
+.miolo{display:none;flex-direction:column;align-items:center;gap:clamp(10px,2vw,18px);width:100%;flex:1;justify-content:center}
+.miolo.on{display:flex}
+.palco{position:relative;perspective:2600px;--alt:clamp(430px,64vh,600px);height:var(--alt);width:min(1020px,100%,calc(var(--alt)*1.44));touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.palco.clip{overflow:hidden;border-radius:5px}
+.palco.pegando{cursor:grabbing}
+.spread{position:absolute;inset:0;display:flex;border-radius:4px;box-shadow:0 34px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05)}
+.pg{flex:1;min-width:0;position:relative;overflow:hidden;background:var(--papel);color:var(--tinta)}
+.pge{border-radius:5px 0 0 5px}
+.pgd{border-radius:0 5px 5px 0}
+.pg::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background-image:radial-gradient(rgba(43,21,51,.045) .5px,transparent .5px);background-size:3px 3px}
+.pge::before{content:"";position:absolute;right:0;top:0;bottom:0;width:44px;z-index:2;background:linear-gradient(270deg,rgba(43,21,51,.16),transparent);pointer-events:none}
+.pgd::before{content:"";position:absolute;left:0;top:0;bottom:0;width:44px;z-index:2;background:linear-gradient(90deg,rgba(43,21,51,.16),transparent);pointer-events:none}
+.pgin{position:absolute;inset:0;overflow:hidden;padding:clamp(30px,4.4vw,52px);display:flex;flex-direction:column}
+.pge .pgin{padding-right:clamp(38px,5vw,58px)}
+.pgd .pgin{padding-left:clamp(38px,5vw,58px)}
+.ff .pgin{padding-left:clamp(38px,5vw,58px)}
+.fv .pgin{padding-right:clamp(38px,5vw,58px)}
+.fit{transform-origin:top left;display:flex;flex-direction:column;min-height:100%}
+.folha{position:absolute;top:0;right:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;z-index:6;pointer-events:none;opacity:0;will-change:transform}
+.folha.viva{opacity:1}
+.ff,.fv{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:var(--papel);border-radius:0 5px 5px 0;transform:translateZ(0)}
+.fv{transform:rotateY(180deg) translateZ(0);border-radius:5px 0 0 5px}
+.fsom,.fvs{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;will-change:opacity}
+.fsom{background:linear-gradient(90deg,rgba(43,21,51,.4) 0%,rgba(43,21,51,.1) 18%,transparent 38%,rgba(255,255,255,.12) 58%,rgba(43,21,51,.14) 100%)}
+.fvs{background:linear-gradient(270deg,rgba(43,21,51,.36) 0%,rgba(43,21,51,.08) 18%,transparent 40%,rgba(255,255,255,.1) 60%,rgba(43,21,51,.12) 100%)}
+.vsom{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;will-change:opacity;background:linear-gradient(90deg,transparent 44%,rgba(20,8,30,.32) 50%,rgba(20,8,30,.1) 62%,transparent 82%)}
+.folha.plana{transform-origin:left center}
+.folha.plana .fv{display:none}
+.folha.plana .ff{border-radius:5px;box-shadow:10px 0 26px rgba(7,4,16,.42)}
+
+.cnum{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--lilas);display:flex;align-items:center;gap:10px;margin-bottom:auto}
+.cnum::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(139,79,168,.4),transparent)}
+.calg{font-family:"Gloock",Georgia,serif;font-size:clamp(64px,12vw,104px);line-height:.8;color:var(--lilas);opacity:.15;letter-spacing:-.05em;margin:auto 0 clamp(12px,2vw,18px)}
+.ctit{font-family:"Gloock",Georgia,serif;font-weight:400;font-size:clamp(28px,4.6vw,42px);line-height:1.02;letter-spacing:-.02em;margin-bottom:clamp(14px,2.2vw,20px)}
+.cepi{font-style:italic;font-weight:300;font-size:clamp(14px,1.65vw,16.5px);line-height:1.6;color:var(--tinta-2);padding-left:14px;border-left:2px solid rgba(139,79,168,.32);margin-bottom:auto}
+.cest{font-family:"Barlow Condensed",sans-serif;font-size:10.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta-2);margin-top:auto;padding-top:16px}
+.corpo{flex:1}
+.corpo p{font-size:clamp(14.5px,1.62vw,16.5px);line-height:1.78;font-weight:300;color:#3A2242;margin-bottom:1.05em;text-align:justify;hyphens:auto}
+.corpo p:last-child{margin-bottom:0}
+.corpo p.pri::first-letter{font-family:"Gloock",Georgia,serif;float:left;font-size:3.05em;line-height:.82;padding:.06em .09em 0 0;color:var(--lilas)}
+.corpo em{font-style:italic;color:var(--tinta)}
+.corpo strong{font-weight:500;color:var(--tinta);background:linear-gradient(transparent 62%,rgba(255,200,0,.32) 62%)}
+.orn{text-align:center;color:var(--lilas);opacity:.45;font-size:14px;letter-spacing:.6em;margin-top:18px}
+.folio{margin-top:auto;padding-top:16px;display:flex;align-items:baseline;gap:10px;font-family:"Barlow Condensed",sans-serif;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-2)}
+.folio i{flex:1;height:1px;background:rgba(43,21,51,.1)}
+.cit{background:linear-gradient(180deg,rgba(139,79,168,.07),rgba(139,79,168,.03));border-left:2.5px solid var(--lilas);border-radius:0 6px 6px 0;padding:13px 15px;margin-bottom:11px}
+.cit b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--lilas);margin-bottom:5px}
+.cit q{font-size:14px;line-height:1.6;font-style:italic;color:#3A2242}
+.rosto{height:100%;display:flex;flex-direction:column;justify-content:center;text-align:center;align-items:center}
+.rded{font-style:italic;font-weight:300;font-size:14.5px;line-height:1.55;color:var(--tinta-2);max-width:30ch;margin:16px 0 8px}
+.numgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.lst{display:flex;flex-direction:column}
+.lsti{display:flex;gap:11px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(43,21,51,.08)}
+.lsti:last-child{border-bottom:none}
+.lsti b{color:var(--lilas);font-size:11px;flex:none;font-weight:400}
+.lsti span{font-size:clamp(14px,1.6vw,16px);line-height:1.55;font-weight:300;font-style:italic;color:#3A2242}
+.numi{background:linear-gradient(180deg,rgba(139,79,168,.07),rgba(139,79,168,.028));border-radius:8px;padding:14px 13px;text-align:center}
+.numi b{display:block;font-family:"Gloock",Georgia,serif;font-weight:400;font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;color:var(--lilas);line-height:1}
+.numi span{display:block;font-family:"Barlow Condensed",sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-2);margin-top:7px;line-height:1.45}
+.rt{font-family:"Gloock",Georgia,serif;font-size:clamp(36px,5.4vw,54px);line-height:.95;letter-spacing:-.03em;margin-bottom:14px}
+.rs{font-style:italic;font-weight:300;font-size:15px;color:var(--tinta-2);margin-bottom:24px;max-width:26ch;line-height:1.5}
+.rl{display:flex;width:70%;margin-bottom:20px}
+.rl i{height:4px;flex:1}
+.rd{font-family:"Barlow Condensed",sans-serif;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta-2)}
+.pqb{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.pqb button{font-family:"Barlow Condensed",sans-serif;font-size:14.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:15px 20px;border-radius:2px;background:var(--lilas);color:var(--papel);transition:transform .18s,background .18s,box-shadow .18s}
+.pqb button:hover{transform:translateY(-2px);background:var(--lilas-esc);box-shadow:0 10px 24px rgba(92,46,117,.32)}
+.pqb button.alt{background:transparent;border:1px solid rgba(43,21,51,.18);color:var(--tinta-2);text-transform:none;letter-spacing:.01em;font-family:"Newsreader",serif;font-style:italic;font-size:14px;font-weight:400}
+.pqb button.alt:hover{background:rgba(139,79,168,.07);color:var(--tinta);box-shadow:none}
+.mapa{width:min(1020px,100%);display:flex;flex-direction:column;gap:10px;align-items:center}
+.trilho{position:relative;display:flex;align-items:center;justify-content:space-between;width:100%;max-width:560px;padding:0 4px}
+.trilho::before{content:"";position:absolute;left:9px;right:9px;top:50%;height:2px;transform:translateY(-50%);background:rgba(248,242,238,.18)}
+.pt{width:26px;height:26px;display:grid;place-items:center;padding:0}
+.pt i{width:9px;height:9px;border-radius:50%;background:rgba(248,242,238,.3);transition:transform .28s cubic-bezier(.22,1,.36,1),background .28s,box-shadow .28s}
+.pt:hover i{transform:scale(1.4);background:var(--papel)}
+.pt.andou i{background:rgba(248,242,238,.62)}
+.pt.aqui i{background:var(--amarelo);transform:scale(1.7);box-shadow:0 0 0 5px rgba(255,200,0,.15)}
+.letreiro{font-family:"Barlow Condensed",sans-serif;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(248,242,238,.55);min-height:1.2em;text-align:center}
+.letreiro b{color:var(--amarelo);font-weight:500}
+.ctrl{display:flex;align-items:center;gap:14px}
+.ctrl .cn{font-family:"Barlow Condensed",sans-serif;font-size:11.5px;letter-spacing:.14em;color:rgba(248,242,238,.35);min-width:56px;text-align:center}
+.gdica{display:flex;align-items:center;gap:9px;font-family:"Barlow Condensed",sans-serif;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(248,242,238,.5);transition:opacity .6s;pointer-events:none}
+.gdica.some{opacity:0}
+.gdica i{display:inline-block;width:22px;height:1px;background:rgba(248,242,238,.4);position:relative;overflow:visible}
+.gdica i::after{content:"";position:absolute;left:0;top:-2.5px;width:6px;height:6px;border-radius:50%;background:var(--amarelo);animation:vaivem 2.2s ease-in-out infinite}
+@keyframes vaivem{0%,100%{left:0;opacity:.4}50%{left:16px;opacity:1}}
+.fim{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.ft{font-family:"Gloock",Georgia,serif;font-size:clamp(32px,5vw,46px);line-height:1;letter-spacing:-.025em}
+.fp{font-style:italic;font-weight:300;font-size:16px;line-height:1.6;color:#3A2242;max-width:30ch}
+.mbcab{display:none}
+@media(max-width:820px){
+  .palco{--alt:clamp(440px,66vh,620px);height:var(--alt);width:min(460px,100%,calc(var(--alt)*.74));perspective:1500px}
+  .vsom{background:linear-gradient(90deg,rgba(20,8,30,.3),rgba(20,8,30,.06) 30%,transparent 60%)}
+  .pge{display:none}.pgd{border-radius:5px}.pgd::before{display:none}
+  .pgd .pgin{padding:clamp(26px,6vw,38px)}
+  .ff .pgin,.fv .pgin{padding:clamp(26px,6vw,38px)}
+  .folha{width:100%}.ff,.fv{border-radius:5px}
+  .calg{display:none}
+  .corpo p{text-align:left;font-size:15.5px;line-height:1.72}
+  .mbcab{display:block}
+}
+.mbcab .cnum{margin-bottom:12px}
+.mbcab .ctit{font-size:clamp(27px,7.4vw,36px)}
+.mbcab .cepi{font-size:14px;margin-bottom:20px}
+
+@media(prefers-reduced-motion:reduce){
+  .folha{display:none !important}
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div id="sys">
+<div class="wrap">
+  <aside class="lateral">
+    <div class="marca">
+      <div class="marca-i"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13h4l3-9 4 18 3-9h6"/></svg></div>
+      <div><div class="marca-t">Amplitude</div><div class="marca-s">Clínica Vértice</div></div>
+    </div>
+    <nav class="menu" id="menu"></nav>
+    <div class="eu"><div class="av">Y</div><div><div class="eu-n">Yasmin</div><div class="eu-f">Produto · build 0.4.2</div></div></div>
+  </aside>
+
+  <div class="principal">
+    <header class="topo">
+      <div class="migalha"><span>Clínica Vértice</span><span>/</span><b id="mgl">Painel</b></div>
+      <button class="busca" id="btBusca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Buscar atleta <kbd>⌘K</kbd>
+      </button>
+      <button class="ib" id="btBuscaMb" style="display:none" title="Buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+      <button class="ib" id="btSino" title="Notificações"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><i class="dot" id="dotSino"></i></button>
+      <button class="ib" id="btRegistro" title="Registrar evolução"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+      <div class="dd" id="ddSino"></div>
+    </header>
+    <div class="conteudo" id="conteudo"></div>
+  </div>
+</div>
+<nav class="navmb"><div class="navmb-in" id="navmb"></div></nav>
+</div>
+
+<div class="veu" id="veu"></div>
+
+<div class="mdb" id="mdb">
+  <div class="mdb-c">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="mdbIn" placeholder="Buscar atleta, diagnóstico ou posição" autocomplete="off">
+    <button class="px" id="mdbX"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="mdb-l" id="mdbL"></div>
+  <div class="mdb-p"><span><b>↑↓</b> navegar</span><span><b>↵</b> abrir</span><span><b>esc</b> fechar</span></div>
+</div>
+
+<aside class="painel" id="painel">
+  <div class="pc">
+    <div class="pc1">
+      <span class="ptag" id="pTag">Nova evolução</span>
+      <button class="px" id="pFechar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="ptit" id="pTit"></div>
+    <div class="psub" id="pSub"></div>
+    <div class="pprog" id="pProg"></div>
+  </div>
+  <div class="pcorpo" id="pCorpo"></div>
+  <div class="pfe">
+    <span class="pn" id="pN"></span>
+    <button class="btn btn-b" id="pVoltar">Voltar</button>
+    <button class="btn" id="pSeguir">Continuar</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastT"></span>
+</div>
+
+<div id="inter"><p class="itx" id="itTxt"></p></div>
+
+<div id="livro">
+  <div class="capacx" id="capacx">
+    <div>
+      <div class="capa" id="capa">
+        <div class="capaf">
+          <div class="capam"></div>
+          <div class="capac">Companhia do Metropolitano de Nós Duas</div>
+          <div class="capameio">
+            <div class="capan" id="cpNome"></div>
+            <div class="capao"><i></i><b>✧</b><i></i></div>
+            <div class="capas" id="cpSub"></div>
+          </div>
+          <div class="capab" id="cpAutor"></div>
+        </div>
+      </div>
+      <div class="capad">toque para abrir</div>
+    </div>
+  </div>
+  <div class="miolo" id="miolo">
+    <div class="palco" id="palco">
+      <div class="spread">
+        <div class="pg pge"><div class="pgin" id="pgE"></div></div>
+        <div class="pg pgd"><div class="pgin" id="pgD"></div></div>
+      </div>
+      <div class="folha" id="folha">
+        <div class="ff"><div class="pgin" id="flF"></div><div class="fsom" id="fsom"></div></div>
+        <div class="fv"><div class="pgin" id="flV"></div><div class="fvs" id="fvs"></div></div>
+      </div>
+      <div class="vsom" id="vsom"></div>
+    </div>
+    <nav class="mapa">
+      <div class="trilho" id="trilho"></div>
+      <div class="letreiro" id="letreiro"></div>
+      <div class="ctrl">
+        <span class="gdica" id="gdica"><i></i>deslize para folhear<i></i></span>
+        <span class="cn" id="cn"></span>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ╔═══════════════════════════════════════════════════════════════╗
+   ║  YASMIN — TUDO QUE VOCÊ EDITA ESTÁ NESTE BLOCO.               ║
+   ║  Onde estiver [ENTRE COLCHETES], troque pelo seu texto.       ║
+   ║  Atalho de teste: aperte L pra pular direto pro livro.        ║
+   ╚═══════════════════════════════════════════════════════════════╝ */
+
+const LIVRO={
+  nome:"Ana Clara",
+  sub:"A nossa história, estação por estação",
+  autor:"Yasmin · desde 14.10.2025",
+  pergunta:"Quer namorar comigo?",
+  dedicatoria:"Para a esquentadinha que fez uma calma atravessar a cidade."  /* aparece na folha de rosto; deixe "" para omitir */
+};
+
+const INTERLUDIO=[
+  "Obrigada, Ana Clara.",
+  "Você acabou de preencher, com todo o cuidado, o registro de uma atleta que não existe.",
+  "É desse jeito que você cuida de tudo. É desse jeito que você cuida de mim.",
+  "Só que esse sistema nunca foi sobre fisioterapia."
+];
+
+const CAPITULOS=[
+  {tipo:"rosto",estacao:"rosto"},
+
+  {tipo:"registro",estacao:"você",num:"Prólogo",
+   titulo:"O que você acabou de escrever",
+   epigrafe:"Há três minutos. Achando que era sobre um paciente.",
+   depois:[
+     "Você escreveu com cuidado. Do jeito que você escreve quando é sério, quando tem alguém dependendo daquilo. E era só mais um registro, no meio de um dia comum.",
+     "É por isso. Não pelo que você faz quando é bonito e romântico — pelo que você faz quando é só terça-feira e alguém precisa de você.",
+     "Você acabou de escrever um plano para a próxima sessão. Eu queria te propor um plano um pouco mais longo."
+   ]},
+
+  {estacao:"galeno",num:"Capítulo um",algarismo:"I",
+   titulo:"Antes de eu saber seu nome",
+   epigrafe:"Unidade Galeno — uma apresentação qualquer, numa tarde qualquer.",
+   corpo:[
+     "A gente se conheceu no CAMP, numa apresentação na unidade da Galeno. Eu não fazia ideia de quem você era. Era só mais um dia de curso, mais uma sala cheia, mais uma tarde que eu ia esquecer até o fim da semana.",
+     "Só que eu não esqueci. <strong>[ESCREVA O QUE VOCÊ REPAROU NELA PRIMEIRO]</strong> — se foi o jeito de falar, o riso, alguma coisa específica que ela disse. Um detalhe pequeno vale dez vezes mais que um elogio grande.",
+     "Eu saí de lá pensando em você e ainda nem sabia o seu nome inteiro."
+   ],
+   fecho:"Eu não sabia, mas aquela tarde já estava decidindo alguma coisa."},
+
+  {estacao:"consolação",num:"Capítulo dois",algarismo:"II",
+   titulo:"Sete segundos de coragem",
+   epigrafe:"Estação Consolação · 14 de outubro de 2025.",
+   corpo:[
+     "Eu levei o caminho inteiro ensaiando. Desisti umas três vezes. Cheguei a passar da catraca decidida a não falar nada.",
+     "<strong>[CONTE COMO FOI DE VERDADE]</strong> — o que você falou, a cara que ela fez, se a sua voz tremeu, se você gaguejou. Não tenta deixar bonito. O charme está em ser honesta, não em ser elegante.",
+     "Você me seguiu de volta e eu fiquei olhando pro celular que nem boba, no meio da estação, com gente passando dos dois lados."
+   ],
+   fecho:"A nossa história inteira coube em sete segundos de coragem numa estação de metrô."},
+
+  {estacao:"distância",num:"Capítulo três",algarismo:"III",
+   titulo:"A cidade inteira entre nós",
+   epigrafe:"Capão Redondo de um lado. Cotia do outro. São Paulo no meio.",
+   corpo:[
+     "Se a gente quisesse desistir, tinha desculpa de sobra. E desculpa boa: distância real, cansaço real, tempo que ninguém tem.",
+     "Mas eu aprendi o caminho. Aprendi os horários, aprendi quanto tempo demora, aprendi a fazer conta de cabeça de quantas horas eu ainda tenho até precisar voltar.",
+     "<strong>[UM DIA ESPECÍFICO QUE VALEU A VIAGEM INTEIRA]</strong> — um só, contado com detalhe, vale mais que dez resumidos. O que vocês fizeram, o que ela falou, a hora em que você teve que ir embora."
+   ],
+   fecho:"Distância nunca foi o problema. Distância é só a conta — e eu pago de bom grado."},
+
+  {estacao:"treino",num:"Capítulo quatro",algarismo:"IV",
+   titulo:"Você nunca para",
+   epigrafe:"Faculdade, treino, prova, quadra, prova de novo.",
+   corpo:[
+     "Você tem uma vida inteira acontecendo ao mesmo tempo, e tem semana que a gente mal se vê direito.",
+     "Eu já achei que isso fosse concorrência. Não é. Eu gosto de você <em>justamente</em> porque você é essa pessoa que corre atrás — e eu não quero, nunca, ser o motivo de você correr menos.",
+     "Eu quero ser quem espera você chegar do treino. Quem escuta sobre a matéria que eu não entendo nada. Quem sabe a data da sua prova sem você precisar lembrar."
+   ],
+   fecho:"Eu não quero um pedaço do seu tempo. Eu quero um lugar na sua vida."},
+
+  {estacao:"efeitos",num:"Capítulo cinco",algarismo:"V",
+   titulo:"O que você faz comigo",
+   epigrafe:"Eu trabalho com lógica. Você não obedece nenhuma.",
+   corpo:[
+     "Tem coisa que eu sei explicar porque é da minha área: sistema, causa e efeito, tudo tem um porquê. Você não. Você chega e o raciocínio cai inteiro.",
+     "Você me manda um áudio qualquer e eu escuto sorrindo que nem boba. Você briga comigo por bobeira e eu ainda acho graça — porque até a sua braveza eu já aprendi a amar. <strong>[TROQUE POR UM EXEMPLO REAL: a última vez que ela te desmontou com uma coisa pequena.]</strong>",
+     "Eu sou a calma de nós duas. Mas perto de você, o meu coração se recusa a colaborar."
+   ],
+   fecho:"Você é a única variável que eu não quero controlar."},
+
+  {estacao:"guardados",tipo:"lista",num:"Capítulo seis",algarismo:"VI",
+   titulo:"Inventário do que eu guardo",
+   epigrafe:"Coisas pequenas demais pra contar pra alguém. Então eu escrevi.",
+   /* Yasmin: quanto mais específico, mais forte. Troque à vontade. */
+   itens:[
+     "O jeito que você fala quando está com sono.",
+     "<strong>[UMA MANIA DELA QUE VOCÊ ACHA FOFA]</strong>",
+     "A sua cara de concentrada explicando músculo, tendão e articulação como se fosse óbvio.",
+     "Você depois de um jogo: suada, reclamando e sorrindo ao mesmo tempo.",
+     "<strong>[UMA FRASE QUE ELA DISSE E VOCÊ NUNCA ESQUECEU]</strong>",
+     "O silêncio bom de ficar junto sem fazer nada."
+   ],
+   fecho:"Nada disso parece grande coisa. É exatamente por isso que é tudo."},
+
+  {estacao:"números",tipo:"numeros",num:"Intervalo",
+   titulo:"Nós duas em números",
+   epigrafe:"Tudo isso aconteceu de verdade. Eu contei.",
+   /* Yasmin: troque os [X] pelos valores reais. Pode apagar linhas,
+      trocar os rótulos ou este capítulo inteiro — o livro se ajusta. */
+   numeros:[
+    ["[X]","viagens entre Cotia e o Capão"],
+    ["[X] h","de trajeto somadas"],
+    ["[X]","dias desde a Consolação"],
+    ["[X]","mensagens trocadas"],
+    ["[X]","áudios que eu ouvi mais de uma vez"],
+    ["2","pessoas que quase desistiram e não desistiram"]
+   ],
+   corpo:[
+    "Nenhum desses números explica nada sozinho. Mas somados, eles contam a mesma coisa que este livro inteiro: eu escolhi, muitas vezes, e escolheria tudo de novo."
+   ],
+   fecho:"O que a gente repete todos os dias diz mais do que o que a gente jura uma vez."},
+
+  {estacao:"as voltas",num:"Capítulo sete",algarismo:"VII",
+   titulo:"As idas e as voltas",
+   epigrafe:"O capítulo que eu quase não escrevi.",
+   corpo:[
+     "A gente se afastou, voltou, se afastou de novo. Teve mágoa, teve silêncio, teve coisa que doeu — dos dois lados.",
+     "Eu não vou fingir que não aconteceu, porque foi exatamente ali que eu descobri o tamanho do que eu sinto. É fácil querer alguém quando está tudo bom.",
+     "Toda vez que a gente se afastou, eu voltei. E eu não voltei por costume, nem por falta de opção. Eu voltei porque nenhuma outra coisa fazia sentido."
+   ],
+   fecho:"Não é bonito porque foi fácil. É bonito porque a gente voltou mesmo assim."},
+
+  {estacao:"o choro",num:"Capítulo oito",algarismo:"VIII",
+   titulo:"O dia em que eu chorei na sua frente",
+   epigrafe:"E eu não sou de fazer isso.",
+   corpo:[
+     "Eu chorei na sua frente. Você viu.",
+     "E eu não estou escrevendo isso pra te cobrar nada — o que passou não é dívida, e eu não quero que você leia esta página com culpa. Estou escrevendo porque foi o dia em que ficou impossível eu mentir pra mim mesma.",
+     "Se eu chorei, é porque já era importante demais. E se depois daquilo eu continuei aqui, é porque eu escolhi você inteira, com história, com passado, com tudo."
+   ],
+   fecho:"Eu chorei porque eu já tinha escolhido, muito antes de saber no que ia dar."},
+
+  {estacao:"futuro",num:"Capítulo nove",algarismo:"IX",
+   titulo:"O que eu quero pra nós",
+   epigrafe:"Eu pensei muito antes de escrever esta página. É a mais verdadeira de todas.",
+   corpo:[
+     "Eu quero estar na arquibancada dos seus jogos gritando o seu nome até ficar rouca, mesmo sem entender a regra direito. Quero te ver de beca no dia da formatura e chorar de novo — dessa vez de um jeito que eu vou adorar.",
+     "Quero ser a primeira paciente da doutora Ana Clara, nem que seja de mentira. Quero que um dia a distância entre a gente seja só a do outro lado da cama.",
+     "Quero brigar por causa de louça, fazer as pazes rápido, e envelhecer implicando uma com a outra — você esquentadinha, eu fingindo calma."
+   ],
+   fecho:"O futuro é a única página que eu não consigo escrever sozinha. Por isso este livro termina com uma pergunta."},
+
+  {estacao:"hoje",tipo:"pergunta",num:"Capítulo dez",algarismo:"X",
+   titulo:"O capítulo que faltava",
+   epigrafe:"Tudo que veio antes foi pra chegar nesta página.",
+   corpo:[
+     "Começou com um Instagram pedido às pressas numa estação de metrô. Passou por uma cidade inteira de distância, por idas e voltas, por um choro que eu não planejei.",
+     "Você é a minha esquentadinha. Eu sou a calma — e olha que eu não fico parada nunca. Não sei explicar por que isso funciona tão bem, mas funciona, e eu não quero testar como seria sem.",
+     "Eu quero fazer o resto com você. Não só o namoro: o resto inteiro. Eu não tenho discurso melhor que este livro, então vou perguntar do jeito mais simples que existe."
+   ]}
+];
+
+/* ══════ daqui pra baixo é o mecanismo ══════ */
+
+const ATLETAS=[
+ {n:"M. Andrade",i:"MA",id:21,p:"Oposto",d:"Tendinopatia patelar bilateral",s:6,t:12,eva:3,visa:68,lsi:84,st:"Fase 3",cor:"ambar",ini:"02/03/2026",adm:128,
+  dor:[8,7,7,6,5,4,3,3,2,2,1,1],carga:[10,14,20,26,33,42,48,57,66,74,83,91],
+  fase:3,faseTxt:"Força e controle excêntrico",lib:"Liberação para gesto esportivo condicionada a VISA-P ≥ 80 e dor pós-salto ≤ 2.",
+  ex:[["Agachamento em declive 25°","excêntrico, 3s na fase negativa","4 × 8"],
+      ["Leg press unilateral","70% de 1RM estimada","3 × 10"],
+      ["Isometria de quadríceps","60° de flexão, dor ≤ 3","5 × 45s"],
+      ["Pliometria — caixa 20 cm","aterrissagem bipodal controlada","3 × 6"],
+      ["Mobilidade de tornozelo","weight-bearing lunge test","2 × 12"]],
+  ev:[["Semana 6","Progressão para pliometria","Dor pós-salto reduziu de 5 para 3. Mantida a carga excêntrica."],
+      ["Semana 4","VISA-P 68","Ganho de 11 pontos desde a avaliação inicial."],
+      ["Semana 2","Início do protocolo excêntrico","Agachamento em declive introduzido sem exacerbação."],
+      ["Semana 0","Avaliação inicial","VISA-P 57 · EVA 8 · LSI 71%. Afastada do treino com bola."]]},
+
+ {n:"L. Ferraz",i:"LF",id:24,p:"Ponteira",d:"Síndrome do impacto subacromial",s:3,t:8,eva:4,visa:61,lsi:78,st:"Fase 2",cor:"laranja",ini:"27/06/2026",adm:142,
+  dor:[7,7,6,6,5,5,4,4],carga:[8,13,19,25,31,38,44,52],
+  fase:2,faseTxt:"Controle escapular e estabilidade",lib:"Retorno ao gesto de ataque suspenso até simetria de rotação externa ≥ 90%.",
+  ex:[["Rotação externa com elástico","cotovelo a 90°, cadência lenta","3 × 15"],
+      ["Push-up plus","ativação do serrátil anterior","3 × 12"],
+      ["Y-T-W em prono","carga leve, foco em controle","3 × 10"],
+      ["Mobilidade torácica","rotação em decúbito lateral","2 × 12"],
+      ["Wall slide escapular","sem compensação de trapézio superior","3 × 10"]],
+  ev:[["Semana 3","Redução da dor noturna","Relata melhora ao dormir sobre o ombro afetado."],
+      ["Semana 2","Ajuste de carga","Elástico progredido de amarelo para verde."],
+      ["Semana 1","Início do fortalecimento","Introduzido trabalho de manguito rotador."],
+      ["Semana 0","Avaliação inicial","EVA 7 · arco doloroso entre 70° e 110°. Neer e Hawkins positivos."]]},
+
+ {n:"C. Nakamura",i:"CN",id:19,p:"Central",d:"Entorse de tornozelo grau II",s:5,t:6,eva:1,visa:88,lsi:93,st:"Liberação",cor:"verde",ini:"14/07/2026",adm:38,
+  dor:[6,5,4,3,2,1],carga:[15,28,42,58,74,88],
+  fase:5,faseTxt:"Retorno ao esporte",lib:"Aguardando parecer final. 4 dos 5 critérios atingidos.",
+  ex:[["Propriocepção em superfície instável","olhos fechados, apoio unipodal","4 × 45s"],
+      ["Hop tests — série de treino","single, triple e crossover","3 séries"],
+      ["Panturrilha unilateral","concêntrico-excêntrico","4 × 15"],
+      ["Agilidade em escada","padrão lateral e in-and-out","5 × 20s"],
+      ["Mobilidade em dorsiflexão","alongamento com faixa","3 × 30s"]],
+  ev:[["Semana 5","Bateria de retorno aplicada","LSI médio de 92%. Déficit remanescente no salto vertical."],
+      ["Semana 4","Liberação para corrida","Sem dor na progressão de volume."],
+      ["Semana 2","Retirada da imobilização parcial","Marcha sem claudicação."],
+      ["Semana 0","Avaliação inicial","Edema perimaleolar. Teste da gaveta anterior positivo."]]},
+
+ {n:"P. Duarte",i:"PD",id:22,p:"Levantadora",d:"Reconstrução de LCA",s:22,t:36,eva:2,visa:74,lsi:87,st:"Fase 4",cor:"azul",ini:"18/09/2025",adm:135,
+  dor:[6,5,5,4,4,3,3,3,2,2,2,2],carga:[6,12,19,27,36,45,54,62,70,77,84,90],
+  fase:4,faseTxt:"Pliometria e controle neuromuscular",lib:"Retorno à quadra previsto para a semana 30, mediante LSI ≥ 90% em todos os testes.",
+  ex:[["Agachamento búlgaro","controle de valgo dinâmico","4 × 10"],
+      ["Nordic hamstring","excêntrico assistido","3 × 6"],
+      ["Pliometria bilateral","progressão para unipodal","4 × 8"],
+      ["Landing drill","aterrissagem com feedback em vídeo","3 × 8"],
+      ["Bicicleta","condicionamento aeróbico","20 min"]],
+  ev:[["Semana 22","Progressão para pliometria unipodal","Sem derrame articular após a sessão."],
+      ["Semana 16","LSI 82%","Déficit de quadríceps em redução progressiva."],
+      ["Semana 8","Fortalecimento em cadeia fechada","ADM completa recuperada."],
+      ["Semana 0","Pós-operatório imediato","Controle de edema e ativação de quadríceps."]]},
+
+ {n:"R. Vilela",i:"RV",id:27,p:"Líbero",d:"Lombalgia mecânica",s:0,t:0,eva:2,visa:80,lsi:96,st:"Manutenção",cor:"cinza",ini:"05/01/2026",adm:0,
+  dor:[5,4,4,3,3,2,2,2],carga:[20,32,44,55,66,74,82,88],
+  fase:5,faseTxt:"Programa de manutenção",lib:"Sem restrição de treino. Reavaliação trimestral.",
+  ex:[["Prancha frontal","progressão de tempo","4 × 45s"],
+      ["Bird-dog","controle lombopélvico","3 × 12"],
+      ["Dead bug","respiração coordenada","3 × 12"],
+      ["Mobilidade de quadril","90/90 com transição","2 × 10"],
+      ["Ponte unilateral","ativação de glúteo máximo","3 × 12"]],
+  ev:[["Semana 30","Manutenção","Sem episódios de dor incapacitante nos últimos 3 meses."],
+      ["Semana 16","Alta da fase ativa","Retorno integral ao treino."],
+      ["Semana 6","Redução da frequência","De 3 para 2 sessões semanais."],
+      ["Semana 0","Avaliação inicial","EVA 5 · dor mecânica sem irradiação."]]}
+];
+
+const AGENDA=[
+ ["08:00","M. Andrade","Fase 3 · força excêntrica","60 min",0,"var(--ambar)"],
+ ["09:30","L. Ferraz","Fase 2 · estabilizadores de escápula","45 min",1,"var(--laranja)"],
+ ["11:00","C. Nakamura","Bateria de hop tests","45 min",2,"var(--verde)"],
+ ["14:00","P. Duarte","Fase 4 · pliometria progressiva","60 min",3,"var(--azul)"],
+ ["16:30","R. Vilela","Manutenção · core e mobilidade","30 min",4,"var(--linha-forte)"]
+];
+
+const NOTIF=[
+ ["C. Nakamura atingiu 4 de 5 critérios","Bateria de retorno ao esporte · há 2 h","var(--verde)"],
+ ["L. Ferraz relatou dor acima do esperado","EVA 4 na última sessão · há 5 h","var(--laranja)"],
+ ["Relatório mensal disponível","Julho de 2026 · ontem","var(--azul)"]
+];
+
+const RELATORIOS=[
+ ["Evolução mensal — julho/2026","5 atletas · 62 sessões registradas","PDF · 1,4 MB"],
+ ["Bateria de retorno — C. Nakamura","Hop tests, Y-Balance e CMJ","PDF · 480 KB"],
+ ["Carga de treino — equipe","ACWR consolidado das 12 semanas","XLSX · 220 KB"],
+ ["Evolução mensal — junho/2026","5 atletas · 58 sessões registradas","PDF · 1,3 MB"]
+];
+
+const IC={
+ painel:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+ atletas:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
+ ficha:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h3"/>',
+ retorno:'<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14.01l-3-3"/>',
+ agenda:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+ relatorios:'<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>'
+};
+const NAV=[
+ {g:"Acompanhamento",itens:[["painel","Painel"],["atletas","Atletas"],["ficha","Prontuário"],["retorno","Retorno ao esporte",2]]},
+ {g:"Gestão",itens:[["agenda","Agenda"],["relatorios","Relatórios"]]}
+];
+const TITULOS={painel:"Painel",atletas:"Atletas",ficha:"Prontuário",retorno:"Retorno ao esporte",agenda:"Agenda",relatorios:"Relatórios"};
+
+document.getElementById("menu").innerHTML=NAV.map(s=>
+ `<div class="menu-r">${s.g}</div>`+s.itens.map(it=>
+  `<button class="mi" data-v="${it[0]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${IC[it[0]]}</svg>${it[1]}${it[2]?`<span class="pino">${it[2]}</span>`:""}</button>`).join("")).join("");
+
+document.getElementById("navmb").innerHTML=[["painel","Painel"],["atletas","Atletas"],["ficha","Prontuário"],["agenda","Agenda"]].map(it=>
+ `<button data-v="${it[0]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${IC[it[0]]}</svg>${it[1]}</button>`).join("");
+
+function pts(v,max,w,h){const px=w/(v.length-1);return v.map((x,i)=>`${(i*px).toFixed(1)},${(h-(x/max)*h).toFixed(1)}`).join(" ");}
+function grafico(a){
+ const W=560,H=170,n=a.dor.length,px=W/(n-1);
+ const marcas=[0,Math.floor((n-1)/3),Math.floor(2*(n-1)/3),n-1];
+ return `<svg viewBox="0 0 ${W} ${H+26}" class="svgr">
+  ${[0,.25,.5,.75,1].map(f=>`<line class="malha" x1="0" y1="${(H*f).toFixed(0)}" x2="${W}" y2="${(H*f).toFixed(0)}"/>`).join("")}
+  <polyline class="traco desenha" points="${pts(a.carga,100,W,H)}" stroke="var(--azul)" opacity=".85" style="animation-delay:.15s"/>
+  <polyline class="traco desenha" points="${pts(a.dor,10,W,H)}" stroke="var(--laranja)"/>
+  ${a.dor.map((v,i)=>`<circle cx="${(i*px).toFixed(1)}" cy="${(H-(v/10)*H).toFixed(1)}" r="2.6" fill="var(--laranja)"/>`).join("")}
+  ${marcas.map(i=>`<text class="et" x="${(i*px).toFixed(0)}" y="${H+17}" text-anchor="${i===0?'start':i===n-1?'end':'middle'}">S${i+1}</text>`).join("")}
+ </svg>
+ <div class="leg"><span><i style="background:var(--laranja)"></i>Dor referida (EVA 0–10)</span><span><i style="background:var(--azul)"></i>Carga semanal acumulada (%)</span></div>`;
+}
+function anel(v,max,rot){
+ const r=38,c=2*Math.PI*r,off=c-(v/max)*c;
+ return `<div class="anelc">
+  <svg width="94" height="94" viewBox="0 0 94 94" style="flex:none">
+   <circle cx="47" cy="47" r="${r}" fill="none" stroke="var(--linha)" stroke-width="9"/>
+   <circle cx="47" cy="47" r="${r}" fill="none" stroke="var(--verde)" stroke-width="9" stroke-linecap="round"
+    stroke-dasharray="${c}" stroke-dashoffset="${c}" transform="rotate(-90 47 47)">
+    <animate attributeName="stroke-dashoffset" from="${c}" to="${off}" dur="1.2s" fill="freeze"
+     calcMode="spline" keySplines="0.22 1 0.36 1" keyTimes="0;1"/>
+   </circle>
+  </svg>
+  <div><div class="aneln">${v}<u>/${max}</u></div><div class="kn" style="margin-top:6px">${rot}</div></div>
+ </div>`;
+}
+
+let sel=0,aprovadoNak=false;
+const VIEWS={
+
+painel:()=>`
+ <div class="cab">
+  <div><h1 class="cab-t">Terça, 18 de agosto</h1><p class="cab-s">5 atendimentos agendados · 2 pareceres pendentes</p></div>
+  <div class="cab-a">
+   <button class="btn btn-b" data-acao="exportar">Exportar relatório</button>
+   <button class="btn" data-acao="registrar">+ Registrar sessão</button>
+  </div>
+ </div>
+ <div class="grade g4" style="margin-bottom:14px">
+  <div class="cart"><div class="kr">Atletas ativos</div><div class="kv mono" data-conta="5">0</div><div class="kn"><span class="seta sobe">▲</span> 2 novos este mês</div></div>
+  <div class="cart"><div class="kr">Aderência ao protocolo</div><div class="kv mono"><span data-conta="87">0</span><u>%</u></div><div class="kn"><span class="seta sobe">▲</span> 4 p.p. vs. mês anterior</div></div>
+  <div class="cart"><div class="kr">ACWR médio</div><div class="kv mono">1,08</div><div class="kn"><span class="selo s-verde">Faixa segura 0,8–1,3</span></div></div>
+  <div class="cart"><div class="kr">Aguardando liberação</div><div class="kv mono" data-conta="2">0</div><div class="kn"><span class="selo s-ambar">Requer parecer</span></div></div>
+ </div>
+ <div class="grade g21">
+  <div class="cart">
+   <div class="cc"><div><div class="ct">Dor × carga — ${ATLETAS[0].n}</div><div class="cd">${ATLETAS[0].dor.length} semanas · protocolo excêntrico progressivo</div></div>
+   <button class="ca" data-ir="ficha" data-at="0">Ver prontuário</button></div>
+   ${grafico(ATLETAS[0])}
+  </div>
+  <div class="cart">
+   <div class="cc"><div><div class="ct">VISA-P</div><div class="cd">Escala funcional para tendinopatia patelar</div></div></div>
+   ${anel(68,100,"Alvo para liberação: ≥ 80")}
+   <div class="crit" style="margin-top:16px">
+    <div class="crl"><span class="cri" style="background:var(--verde)">✓</span><span class="crn">Dor em repouso</span><span class="crv mono">0/10</span></div>
+    <div class="crl"><span class="cri" style="background:var(--ambar)">!</span><span class="crn">Dor pós-salto</span><span class="crv mono">3/10<span class="cra">alvo ≤2</span></span></div>
+   </div>
+  </div>
+ </div>
+ <div class="cart" style="margin-top:14px">
+  <div class="cc"><div><div class="ct">Sessões de hoje</div><div class="cd">Terça-feira · 5 atendimentos</div></div>
+  <button class="ca" data-ir="agenda">Abrir agenda</button></div>
+  <ul class="lista">
+   ${AGENDA.map(s=>`<li><button class="li clic" data-ir="ficha" data-at="${s[4]}">
+     <i class="lim" style="background:${s[5]}"></i>
+     <span><span class="lin">${s[1]} · ${s[0]}</span><span class="lid">${s[2]}</span></span>
+     <span class="liv">${s[3]}</span></button></li>`).join("")}
+  </ul>
+ </div>`,
+
+atletas:()=>`
+ <div class="cab">
+  <div><h1 class="cab-t">Atletas</h1><p class="cab-s">Equipe de vôlei · temporada 2026</p></div>
+  <div class="cab-a"><button class="btn" data-acao="registrar">+ Registrar evolução</button></div>
+ </div>
+ <div class="cart">
+  <div style="overflow-x:auto">
+  <table class="tab">
+   <thead><tr><th>Atleta</th><th>Diagnóstico</th><th>Progresso</th><th class="escmb">EVA</th><th class="escmb">LSI</th><th>Status</th></tr></thead>
+   <tbody>
+    ${ATLETAS.map((a,i)=>`<tr data-ir="ficha" data-at="${i}">
+      <td><div class="pes"><div class="pes-a">${a.i}</div><div><div class="pes-n">${a.n}</div><div class="pes-m">${a.id} anos · ${a.p}</div></div></div></td>
+      <td style="color:var(--t2);font-size:12.5px">${a.d}</td>
+      <td><div style="display:flex;align-items:center;gap:9px">
+       <div class="barra"><i style="width:${a.t?Math.round(a.s/a.t*100):100}%"></i></div>
+       <span class="mono" style="font-size:11.5px;color:var(--t2)">${a.t?`${a.s}/${a.t}`:"—"}</span></div></td>
+      <td class="mono escmb">${a.eva}/10</td><td class="mono escmb">${a.lsi}%</td>
+      <td><span class="selo s-${a.cor}">${a.st}</span></td></tr>`).join("")}
+   </tbody></table></div>
+ </div>`,
+
+ficha:()=>{
+ const a=ATLETAS[sel];
+ return `<div class="cab">
+  <div><h1 class="cab-t">${a.n}</h1><p class="cab-s">${a.id} anos · ${a.p} · ${a.d}</p></div>
+  <div class="cab-a"><button class="btn btn-b" data-acao="exportar">Exportar ficha</button>
+  <button class="btn" data-acao="registrar">+ Registrar evolução</button></div>
+ </div>
+ <div class="cart" style="margin-bottom:14px">
+  <div class="cc">
+   <div class="pes-a" style="width:44px;height:44px;font-size:14px">${a.i}</div>
+   <div><div class="ct" style="font-size:16px">${a.n}</div><div class="cd">Início do acompanhamento: ${a.ini}</div></div>
+   <span class="selo s-${a.cor}" style="margin-left:auto">${a.t?`Semana ${a.s} de ${a.t}`:a.st}</span>
+  </div>
+  <div class="fases">${[1,2,3,4,5].map(f=>`<div class="fase ${f<a.fase?'ok':f===a.fase?'agora':''}"></div>`).join("")}</div>
+  <div style="font-size:12.5px;color:var(--t2)"><b style="color:var(--t1)">Fase ${a.fase} — ${a.faseTxt}.</b> ${a.lib}</div>
+ </div>
+ <div class="grade g4" style="margin-bottom:14px">
+  <div class="cart"><div class="kr">Dor (EVA)</div><div class="kv mono">${a.eva}<u>/10</u></div><div class="kn">última sessão</div></div>
+  <div class="cart"><div class="kr">${a.adm?"ADM":"Simetria"}</div><div class="kv mono">${a.adm||a.lsi}<u>${a.adm?"°":"%"}</u></div><div class="kn">${a.adm?"goniometria ativa":"membro contralateral"}</div></div>
+  <div class="cart"><div class="kr">Escala funcional</div><div class="kv mono">${a.visa}<u>/100</u></div><div class="kn">${a.visa>=80?'<span class="selo s-verde">No alvo</span>':'<span class="selo s-ambar">Abaixo do alvo</span>'}</div></div>
+  <div class="cart"><div class="kr">Simetria (LSI)</div><div class="kv mono">${a.lsi}<u>%</u></div><div class="kn">alvo ≥ 90%</div></div>
+ </div>
+ <div class="cart" style="margin-bottom:14px">
+  <div class="cc"><div><div class="ct">Dor × carga</div><div class="cd">${a.dor.length} semanas de acompanhamento</div></div></div>
+  ${grafico(a)}
+ </div>
+ <div class="grade g2">
+  <div class="cart">
+   <div class="cc"><div class="ct">Sessão prescrita — hoje</div></div>
+   <ul class="lista">${a.ex.map(e=>`<li><div class="li"><i class="lim"></i><span><span class="lin">${e[0]}</span><span class="lid">${e[1]}</span></span><span class="liv mono">${e[2]}</span></div></li>`).join("")}</ul>
+  </div>
+  <div class="cart">
+   <div class="cc"><div class="ct">Evolução clínica</div><button class="ca" data-acao="registrar">+ Registrar</button></div>
+   <div class="tl">${a.ev.map((t,i)=>`<div class="tli ${i===0?'mk':''}"><div class="tld">${t[0]}</div><div class="tlt">${t[1]}</div><div class="tlp">${t[2]}</div></div>`).join("")}</div>
+  </div>
+ </div>`;
+},
+
+retorno:()=>`
+ <div class="cab"><div><h1 class="cab-t">Retorno ao esporte</h1><p class="cab-s">${aprovadoNak?"1 atleta aguardando parecer":"2 atletas aguardando parecer"}</p></div></div>
+ <div class="cart" style="margin-bottom:14px">
+  <div class="cc"><div><div class="ct">Bateria de retorno — C. Nakamura</div><div class="cd">Entorse de tornozelo grau II · aplicada em 18/08/2026</div></div>
+  <span class="selo ${aprovadoNak?"s-verde":"s-verde"}" style="margin-left:auto">${aprovadoNak?"Liberada parcialmente":"4 de 5 critérios"}</span></div>
+  <div class="crit">
+   ${[["Single hop for distance","94%","≥ 90%",1],["Triple hop for distance","92%","≥ 90%",1],
+      ["Crossover hop","91%","≥ 90%",1],["Salto vertical (CMJ) — simetria","88%","≥ 90%",0],
+      ["Y-Balance — alcance posteromedial","95%","≥ 90%",1]].map(c=>
+    `<div class="crl"><span class="cri" style="background:${c[3]?'var(--verde)':'var(--ambar)'}">${c[3]?'✓':'!'}</span>
+     <span class="crn">${c[0]}</span><span class="crv mono">${c[1]}<span class="cra">${c[2]}</span></span></div>`).join("")}
+  </div>
+ </div>
+ <div class="grade g2">
+  <div class="cart"><div class="cc"><div class="ct">Índice de simetria (LSI)</div></div>${anel(92,100,"Média dos hop tests · alvo ≥ 90")}</div>
+  <div class="cart">
+   <div class="cc"><div class="ct">${aprovadoNak?"Parecer registrado":"Parecer pendente"}</div></div>
+   ${aprovadoNak
+    ?`<div class="resumo">
+       <div class="resumo-l"><b>Decisão</b><span>Liberação parcial</span></div>
+       <div class="resumo-l"><b>Restrição</b><span>Sem salto de ataque</span></div>
+       <div class="resumo-l"><b>Reavaliação</b><span>Em 14 dias · 01/09/2026</span></div>
+       <div class="resumo-l"><b>Registrado por</b><span>Yasmin · hoje</span></div>
+      </div>
+      <p style="font-size:12.5px;line-height:1.6;color:var(--t2);margin-top:12px">O parecer foi anexado ao prontuário e a comissão técnica foi notificada.</p>`
+    :`<p style="font-size:13px;line-height:1.65;color:var(--t2)">A atleta atinge simetria nos três hop tests, mas mantém déficit de 12% no salto vertical. O sistema sugere <b style="color:var(--t1)">liberação parcial</b>: treino técnico sem salto de ataque, com reavaliação em 14 dias.</p>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+       <button class="btn" style="font-size:12.5px;padding:9px 15px" data-acao="aprovar">Aprovar sugestão</button>
+       <button class="btn btn-b" style="font-size:12.5px;padding:9px 15px" data-acao="registrar">Ajustar parecer</button>
+      </div>`}
+  </div>
+ </div>`,
+
+agenda:()=>`
+ <div class="cab">
+  <div><h1 class="cab-t">Agenda</h1><p class="cab-s">Terça, 18 de agosto de 2026 · 4 h de atendimento</p></div>
+  <div class="cab-a"><button class="btn" data-acao="registrar">+ Registrar evolução</button></div>
+ </div>
+ <div class="cart" style="margin-bottom:14px">
+  <div class="cc"><div><div class="ct">Hoje</div><div class="cd">5 atendimentos · horário livre às 13:00</div></div></div>
+  <div class="ag">
+   ${AGENDA.map(s=>`<button class="agl" data-ir="ficha" data-at="${s[4]}">
+     <span class="agh mono">${s[0]}</span><span class="agb" style="background:${s[5]}"></span>
+     <span><span class="agn">${s[1]}</span><span class="agd">${s[2]}</span></span>
+     <span class="agv">${s[3]}</span></button>`).join("")}
+  </div>
+ </div>
+ <div class="grade g2">
+  <div class="cart"><div class="kr">Sessões esta semana</div><div class="kv mono" data-conta="23">0</div><div class="kn"><span class="seta sobe">▲</span> 3 a mais que a média</div></div>
+  <div class="cart"><div class="kr">Faltas no mês</div><div class="kv mono" data-conta="2">0</div><div class="kn">comparecimento de 96%</div></div>
+ </div>`,
+
+relatorios:()=>`
+ <div class="cab">
+  <div><h1 class="cab-t">Relatórios</h1><p class="cab-s">Documentos gerados nos últimos 60 dias</p></div>
+  <div class="cab-a"><button class="btn" data-acao="exportar">Gerar novo relatório</button></div>
+ </div>
+ <div class="cart">
+  <ul class="lista">
+   ${RELATORIOS.map(r=>`<li><button class="li clic" data-acao="baixar">
+    <i class="lim" style="background:var(--azul)"></i>
+    <span><span class="lin">${r[0]}</span><span class="lid">${r[1]}</span></span>
+    <span class="liv">${r[2]}</span></button></li>`).join("")}
+  </ul>
+ </div>`
+};
+
+const conteudo=document.getElementById("conteudo");
+function esqueleto(){
+ conteudo.innerHTML=`<div class="sk" style="height:22px;width:180px;margin-bottom:20px"></div>
+  <div class="grade g4" style="margin-bottom:14px">${"<div class='cart'><div class='sk' style='height:11px;width:60%'></div><div class='sk' style='height:26px;width:44%;margin:12px 0 8px'></div><div class='sk' style='height:11px;width:76%'></div></div>".repeat(4)}</div>
+  <div class="cart"><div class="sk" style="height:13px;width:34%;margin-bottom:16px"></div><div class="sk" style="height:168px"></div></div>`;
+}
+function contar(){
+ document.querySelectorAll("[data-conta]").forEach(el=>{
+  const alvo=+el.dataset.conta;let n=0;const p=Math.max(1,Math.round(alvo/26));
+  const t=setInterval(()=>{n+=p;if(n>=alvo){n=alvo;clearInterval(t);}el.textContent=n;},22);
+ });
+}
+function ir(v,at){
+ if(at!==undefined)sel=+at;
+ document.querySelectorAll("[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+ document.getElementById("mgl").textContent=(v==="ficha"?ATLETAS[sel].n:TITULOS[v])||"Painel";
+ esqueleto();
+ setTimeout(()=>{conteudo.innerHTML=(VIEWS[v]||VIEWS.painel)();contar();window.scrollTo({top:0,behavior:"smooth"});},380);
+}
+document.addEventListener("click",e=>{
+ const v=e.target.closest("[data-v]");
+ if(v){ir(v.dataset.v);return;}
+ const r=e.target.closest("[data-ir]");
+ if(r){ir(r.dataset.ir,r.dataset.at);return;}
+ const a=e.target.closest("[data-acao]");
+ if(a)acao(a.dataset.acao);
+});
+function acao(k){
+ if(k==="registrar")abrirRegistro();
+ else if(k==="exportar"){toast("Gerando relatório…");setTimeout(()=>toast("Relatório exportado com sucesso."),1600);}
+ else if(k==="baixar")toast("Download iniciado.");
+ else if(k==="aprovar"){
+  aprovadoNak=true;
+  toast("Parecer registrado. C. Nakamura liberada parcialmente.");
+  const pino=document.querySelector(".pino");
+  if(pino)pino.textContent="1";
+  ir("retorno");
+ }
+}
+conteudo.innerHTML=VIEWS.painel();contar();
+document.querySelectorAll('[data-v="painel"]').forEach(b=>b.classList.add("on"));
+
+const ddSino=document.getElementById("ddSino");
+ddSino.innerHTML=`<div class="dd-c"><b>Notificações</b><i>${NOTIF.length} novas</i></div>`+
+ NOTIF.map(n=>`<button class="dd-i"><span class="dd-p" style="background:${n[2]}"></span><span><span class="dd-t">${n[0]}</span><span class="dd-d">${n[1]}</span></span></button>`).join("");
+document.getElementById("btSino").onclick=e=>{
+ e.stopPropagation();
+ if(ddSino.classList.toggle("on"))document.getElementById("dotSino").style.display="none";
+};
+ddSino.querySelectorAll(".dd-i").forEach(b=>b.onclick=e=>{e.stopPropagation();ddSino.classList.remove("on");toast("Notificação marcada como lida.");});
+document.addEventListener("click",()=>ddSino.classList.remove("on"));
+
+const mdb=document.getElementById("mdb"),mdbIn=document.getElementById("mdbIn"),mdbL=document.getElementById("mdbL");
+let bsel=0,bres=[];
+function pintaBusca(){
+ const q=mdbIn.value.trim().toLowerCase();
+ bres=ATLETAS.map((a,i)=>({a,i})).filter(({a})=>!q||(a.n+" "+a.d+" "+a.p).toLowerCase().includes(q));
+ if(!bres.length){
+  mdbL.innerHTML=`<div class="vazio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><p>Nenhum atleta encontrado.</p></div>`;return;
+ }
+ if(bsel>=bres.length)bsel=0;
+ mdbL.innerHTML=bres.map((r,j)=>`<button class="mdb-i ${j===bsel?'sel':''}" data-j="${j}">
+  <span class="pes-a">${r.a.i}</span>
+  <span style="flex:1;min-width:0"><span class="pes-n" style="display:block">${r.a.n}</span><span class="pes-m">${r.a.d}</span></span>
+  <span class="selo s-${r.a.cor}">${r.a.st}</span></button>`).join("");
+ mdbL.querySelectorAll(".mdb-i").forEach(b=>b.onclick=()=>abrirBuscado(+b.dataset.j));
+}
+function abrirBuscado(j){const r=bres[j];if(!r)return;fecharBusca();ir("ficha",r.i);}
+function abrirBusca(){document.getElementById("veu").classList.add("on");mdb.classList.add("on");mdbIn.value="";bsel=0;pintaBusca();setTimeout(()=>mdbIn.focus(),140);}
+function fecharBusca(){document.getElementById("veu").classList.remove("on");mdb.classList.remove("on");}
+document.getElementById("btBusca").onclick=abrirBusca;
+document.getElementById("btBuscaMb").onclick=abrirBusca;
+document.getElementById("mdbX").onclick=fecharBusca;
+mdbIn.oninput=()=>{bsel=0;pintaBusca();};
+mdbIn.onkeydown=e=>{
+ if(e.key==="ArrowDown"){e.preventDefault();bsel=Math.min(bsel+1,bres.length-1);pintaBusca();}
+ if(e.key==="ArrowUp"){e.preventDefault();bsel=Math.max(bsel-1,0);pintaBusca();}
+ if(e.key==="Enter"){e.preventDefault();abrirBuscado(bsel);}
+};
+
+let tt=null;
+function toast(txt){
+ document.getElementById("toastT").textContent=txt;
+ const t=document.getElementById("toast");
+ t.classList.add("on");clearTimeout(tt);
+ tt=setTimeout(()=>t.classList.remove("on"),2800);
+}
+
+/* ══════ REGISTRO DE EVOLUÇÃO ══════ */
+const CONDUTAS=[
+ ["Cinesioterapia ativa","exercício terapêutico supervisionado"],
+ ["Fortalecimento excêntrico","carga progressiva controlada"],
+ ["Treino proprioceptivo","superfície instável e apoio unipodal"],
+ ["Terapia manual","mobilização articular e liberação miofascial"],
+ ["Educação em dor","orientação e manejo de expectativa"]
+];
+const REG={eva:null,queixa:"",adm:"",condutas:[],evolucao:"",plano:""};
+const PASSOS=[
+ {k:"subjetiva",tit:"Avaliação subjetiva",sub:"Como a atleta chegou hoje."},
+ {k:"objetiva",tit:"Medidas objetivas",sub:"Goniometria e referências da última sessão."},
+ {k:"conduta",tit:"Conduta aplicada",sub:"Selecione tudo que foi realizado na sessão."},
+ {k:"evolucao",tit:"Evolução da sessão",sub:"Registro descritivo do atendimento."},
+ {k:"plano",tit:"Plano para a próxima sessão",sub:"O que fica programado daqui em diante."}
+];
+const CORES_EVA=["#00806B","#2E8A62","#5C9459","#8A9E50","#B8A847","#C98A16","#D07A2A","#D66A33","#D9603C","#C4402A","#A32F1F"];
+
+let ps=0;
+const pCorpo=document.getElementById("pCorpo"),pProg=document.getElementById("pProg"),pN=document.getElementById("pN");
+const pSeguir=document.getElementById("pSeguir"),pVoltar=document.getElementById("pVoltar");
+pProg.innerHTML=PASSOS.map(()=>"<i></i>").join("");
+
+function pinta(){
+ const p=PASSOS[ps],a=ATLETAS[sel];
+ document.getElementById("pTit").textContent=p.tit;
+ document.getElementById("pSub").textContent=p.sub;
+ document.getElementById("pTag").textContent=a.n;
+
+ let html="";
+ if(p.k==="subjetiva"){
+  html=`<div class="campo"><label class="rot">Dor referida — escala visual analógica</label>
+   <div class="eva">${[0,1,2,3,4,5,6,7,8,9,10].map(n=>
+    `<button class="${REG.eva===n?'on':''}" data-eva="${n}" style="${REG.eva===n?`background:${CORES_EVA[n]}`:''}">${n}</button>`).join("")}</div>
+   <div class="evar"><span>Sem dor</span><span>Dor máxima</span></div></div>
+   <div class="campo"><label class="rot">Queixa relatada pela atleta</label>
+   <textarea class="txa" style="min-height:96px" data-c="queixa" placeholder="O que ela relatou ao chegar…">${REG.queixa}</textarea></div>`;
+ }else if(p.k==="objetiva"){
+  html=`<div class="campo"><label class="rot">Amplitude de movimento (goniometria ativa)</label>
+   <div class="num"><input type="number" inputmode="numeric" data-c="adm" value="${REG.adm}" placeholder="${a.adm||120}"><span>graus</span></div></div>
+   <div class="campo"><label class="rot">Referências da última medição</label>
+   <div class="resumo">
+    <div class="resumo-l"><b>ADM anterior</b><span>${a.adm?a.adm+"°":"não aplicável"}</span></div>
+    <div class="resumo-l"><b>Escala funcional</b><span>${a.visa}/100</span></div>
+    <div class="resumo-l"><b>Simetria (LSI)</b><span>${a.lsi}%</span></div>
+    <div class="resumo-l"><b>Fase atual</b><span>Fase ${a.fase} — ${a.faseTxt}</span></div>
+   </div></div>`;
+ }else if(p.k==="conduta"){
+  html=`<div class="ops">${CONDUTAS.map(c=>
+   `<button class="op ${REG.condutas.includes(c[0])?'on':''}" data-cond="${c[0]}">
+    <span class="opb"></span><span><span>${c[0]}</span><span class="op-d">${c[1]}</span></span></button>`).join("")}</div>`;
+ }else if(p.k==="evolucao"){
+  html=`<div class="campo"><label class="rot">Evolução</label>
+   <textarea class="txa" data-c="evolucao" placeholder="Descreva como foi a sessão, a resposta ao estímulo, intercorrências…">${REG.evolucao}</textarea>
+   <div class="cchar" data-cc="evolucao"></div></div>`;
+ }else{
+  html=`<div class="campo"><label class="rot">Plano terapêutico</label>
+   <textarea class="txa" data-c="plano" placeholder="O que fica programado para a próxima sessão…">${REG.plano}</textarea>
+   <div class="cchar" data-cc="plano"></div></div>
+   <div class="campo"><label class="rot">Resumo do registro</label>
+   <div class="resumo">
+    <div class="resumo-l"><b>Atleta</b><span>${a.n}</span></div>
+    <div class="resumo-l"><b>Dor (EVA)</b><span>${REG.eva!==null?REG.eva+"/10":"—"}</span></div>
+    <div class="resumo-l"><b>ADM</b><span>${REG.adm?REG.adm+"°":"—"}</span></div>
+    <div class="resumo-l"><b>Condutas</b><span>${REG.condutas.length?REG.condutas.length+" selecionadas":"—"}</span></div>
+   </div></div>`;
+ }
+
+ pCorpo.innerHTML=`<div class="passo"><div class="pnum">Etapa ${ps+1} de ${PASSOS.length}</div>${html}</div>`;
+
+ pCorpo.querySelectorAll("[data-eva]").forEach(b=>b.onclick=()=>{REG.eva=+b.dataset.eva;pinta();});
+ pCorpo.querySelectorAll("[data-cond]").forEach(b=>b.onclick=()=>{
+  const v=b.dataset.cond;
+  const k=REG.condutas.indexOf(v);
+  k>=0?REG.condutas.splice(k,1):REG.condutas.push(v);
+  pinta();
+ });
+ pCorpo.querySelectorAll("[data-c]").forEach(el=>{
+  const k=el.dataset.c;
+  const cc=pCorpo.querySelector(`[data-cc="${k}"]`);
+  if(cc)cc.textContent=`${(REG[k]||"").length} caracteres`;
+  el.oninput=()=>{REG[k]=el.value;if(cc)cc.textContent=`${el.value.length} caracteres`;};
+  if(el.tagName==="TEXTAREA")setTimeout(()=>el.focus(),280);
+ });
+
+ pProg.querySelectorAll("i").forEach((el,i)=>el.classList.toggle("ok",i<=ps));
+ pN.textContent=`${ps+1} / ${PASSOS.length}`;
+ pVoltar.style.visibility=ps===0?"hidden":"visible";
+ pSeguir.textContent=ps===PASSOS.length-1?"Salvar evolução":"Continuar";
+}
+
+function abrirRegistro(){
+ document.getElementById("veu").classList.add("on");
+ document.getElementById("painel").classList.add("on");
+ document.body.style.overflow="hidden";
+ ps=0;pinta();
+}
+function fecharRegistro(){
+ document.getElementById("veu").classList.remove("on");
+ document.getElementById("painel").classList.remove("on");
+ document.body.style.overflow="";
+}
+document.getElementById("btRegistro").onclick=abrirRegistro;
+document.getElementById("pFechar").onclick=fecharRegistro;
+document.getElementById("veu").onclick=()=>{fecharRegistro();fecharBusca();};
+pVoltar.onclick=()=>{if(ps>0){ps--;pinta();}};
+pSeguir.onclick=()=>{
+ if(ps<PASSOS.length-1){ps++;pinta();return;}
+ pSeguir.disabled=true;pSeguir.textContent="Salvando…";
+ setTimeout(()=>{
+  fecharRegistro();
+  toast(`Evolução registrada — ${ATLETAS[sel].n}.`);
+  setTimeout(interludio,1500);
+ },1500);
+};
+
+function interludio(){
+ const tela=document.getElementById("inter"),alvo=document.getElementById("itTxt");
+ tela.classList.add("on");
+ let i=0;
+ (function prox(){
+  if(i>=INTERLUDIO.length){setTimeout(()=>{tela.classList.remove("on");abrirLivro();},1100);return;}
+  alvo.innerHTML=INTERLUDIO[i].split(" ").map(p=>`<span>${p}</span>`).join(" ");
+  const sp=alvo.querySelectorAll("span");
+  sp.forEach((s,j)=>setTimeout(()=>s.classList.add("vem"),j*115));
+  setTimeout(()=>{sp.forEach(s=>s.classList.remove("vem"));i++;setTimeout(prox,900);},sp.length*115+2500);
+ })();
+}
+
+/* ══════ LIVRO ══════ */
+const pgE=document.getElementById("pgE"),pgD=document.getElementById("pgD");
+const folha=document.getElementById("folha"),flF=document.getElementById("flF"),flV=document.getElementById("flV");
+const trilho=document.getElementById("trilho"),letreiro=document.getElementById("letreiro"),cn=document.getElementById("cn");
+let atual=0,virando=false;
+const quieto=(typeof window.matchMedia==="function")?window.matchMedia("(prefers-reduced-motion: reduce)").matches:false;
+
+document.getElementById("cpNome").textContent=LIVRO.nome;
+document.getElementById("cpSub").textContent=LIVRO.sub;
+document.getElementById("cpAutor").textContent=LIVRO.autor;
+
+function abrirLivro(){
+ document.getElementById("sys").classList.add("foi");
+ document.getElementById("livro").classList.add("on");
+ document.body.style.overflow="hidden";
+}
+document.getElementById("capa").onclick=()=>{
+ const c=document.getElementById("capa");
+ if(c.classList.contains("abrindo"))return;
+ const m=document.getElementById("miolo");
+ m.classList.add("on");          /* o livro aberto já aparece atrás da capa */
+ render();                        /* trabalho pesado ANTES da animação, não durante */
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  c.classList.add("abrindo");
+  m.classList.add("entra");
+ }));
+ setTimeout(assenta,300);         /* a página assenta enquanto a capa termina de girar */
+ setTimeout(()=>{document.getElementById("capacx").style.display="none";},640);
+};
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+
+function bloco(c,i){
+ if(c.tipo==="rosto"){
+  return {e:`<div class="rosto"><div class="rl"><i style="background:var(--lilas)"></i><i style="background:var(--amarelo)"></i><i style="background:var(--verde-l)"></i></div>
+    <div class="rs" style="margin-bottom:0">Primeira edição · tiragem de um exemplar</div></div>`,
+   d:`<div class="rosto"><div class="rt">${LIVRO.nome}</div><div class="rs">${LIVRO.sub}</div>
+    <div class="rl"><i style="background:var(--lilas)"></i><i style="background:var(--amarelo)"></i><i style="background:var(--verde-l)"></i></div>
+    ${LIVRO.dedicatoria?`<div class="rded">${LIVRO.dedicatoria}</div>`:""}
+    <div class="rd">${LIVRO.autor}</div></div>`};
+ }
+
+ const cab=`<div class="cnum">${c.num}</div>
+  ${c.algarismo?`<div class="calg">${c.algarismo}</div>`:""}
+  <div class="ctit">${c.titulo}</div>
+  ${c.epigrafe?`<div class="cepi">${c.epigrafe}</div>`:""}
+  <div class="cest">Estação ${c.estacao}</div>`;
+
+ let miolo="";
+ if(c.tipo==="lista"){
+  miolo=`<div class="lst">${c.itens.map(t=>`<div class="lsti"><b>✧</b><span>${t}</span></div>`).join("")}</div>
+   ${c.fecho?`<div class="cepi" style="margin:18px 0 0;border-left-color:rgba(255,200,0,.6)">${c.fecho}</div>`:""}`;
+ }else if(c.tipo==="numeros"){
+  miolo=`<div class="numgrid">${c.numeros.map(n=>
+    `<div class="numi"><b>${n[0]}</b><span>${n[1]}</span></div>`).join("")}</div>
+   ${c.corpo?`<div class="corpo" style="margin-top:18px">${c.corpo.map(p=>`<p>${p}</p>`).join("")}</div>`:""}
+   ${c.fecho?`<div class="cepi" style="margin:18px 0 0;border-left-color:rgba(255,200,0,.6)">${c.fecho}</div>`:""}`;
+ }else if(c.tipo==="registro"){
+  const cits=[];
+  if(REG.queixa)cits.push(["Queixa relatada",REG.queixa]);
+  if(REG.evolucao)cits.push(["Evolução da sessão",REG.evolucao]);
+  if(REG.plano)cits.push(["Plano para a próxima sessão",REG.plano]);
+  const bl=cits.length
+   ? cits.map(t=>`<div class="cit"><b>${t[0]}</b><q>${esc(t[1])}</q></div>`).join("")
+   : `<div class="cit"><b>Você deixou em branco</b><q>E tudo bem. O que vem depois vale do mesmo jeito.</q></div>`;
+  miolo=`${bl}<div class="corpo" style="margin-top:16px">${c.depois.map((p,j)=>`<p${j===0?' class="pri"':''}>${p}</p>`).join("")}</div>`;
+ }else if(c.tipo==="pergunta"){
+  miolo=`<div class="corpo">${c.corpo.map((p,j)=>`<p${j===0?' class="pri"':''}>${p}</p>`).join("")}</div>
+   <div class="ctit" style="margin:22px 0 0;color:var(--lilas);font-size:clamp(24px,3.6vw,34px)">${LIVRO.pergunta}</div>
+   <div class="pqb"><button onclick="responderSim()">Sim</button>
+   <button class="alt" onclick="responderSim()">sim, mas você vai ter que aguentar minhas implicâncias</button></div>`;
+ }else{
+  miolo=`<div class="corpo">${c.corpo.map((p,j)=>`<p${j===0?' class="pri"':''}>${p}</p>`).join("")}</div>
+   ${c.fecho?`<div class="cepi" style="margin:20px 0 0;border-left-color:rgba(255,200,0,.6)">${c.fecho}</div>`:""}
+   <div class="orn">✦ ✦ ✦</div>`;
+ }
+
+ return {e:cab,
+  d:`<div class="mbcab">${cab.replace('<div class="cest">','<div class="cest" style="display:none">')}</div>
+     ${miolo}<div class="folio"><span>${LIVRO.nome}</span><i></i><span>${String(i*2).padStart(2,"0")}</span></div>`};
+}
+
+/* ── auto-encaixe: cada página reduz a própria escala até caber, sem scroll ── */
+let fitCache={};
+function poe(el,html,chave){
+ el.innerHTML=`<div class="fit">${html}</div>`;
+ const f=el.firstElementChild;
+ const aplica=s=>{f.style.width=(100/s).toFixed(3)+"%";f.style.height=(100/s).toFixed(3)+"%";f.style.transform=`scale(${s})`;};
+ let s=fitCache[chave];
+ if(s==null){
+  s=1;aplica(s);
+  let guarda=0;
+  while(f.scrollHeight>f.clientHeight+2&&s>0.66&&guarda++<12){s=+(s-0.04).toFixed(2);aplica(s);}
+  fitCache[chave]=s;
+ }else aplica(s);
+}
+window.addEventListener("resize",()=>{
+ fitCache={};
+ if(document.getElementById("miolo").classList.contains("on")&&!virando)render();
+});
+
+function render(){
+ const b=bloco(CAPITULOS[atual],atual);
+ poe(pgE,b.e,atual+":e");poe(pgD,b.d,atual+":d");
+ pintaMapa();
+}
+function pintaMapa(){
+ trilho.innerHTML=CAPITULOS.map((c,i)=>
+  `<button class="pt ${i===atual?'aqui':''} ${i<atual?'andou':''}" onclick="irCap(${i})" aria-label="${c.estacao}"><i></i></button>`).join("");
+ letreiro.innerHTML=`<b>${CAPITULOS[atual].estacao}</b>`;
+ cn.textContent=`${atual+1} / ${CAPITULOS.length}`;
+}
+
+/* ── motor de virada: drag interativo + tween próprio (física de papel) ── */
+const palco=document.getElementById("palco");
+const fsom=document.getElementById("fsom"),fvs=document.getElementById("fvs");
+const vsom=document.getElementById("vsom");
+const gdica=document.getElementById("gdica");
+let G=null,rafId=0,pPend=null,jaFolheou=false,tweenId=0;
+
+const ehMovel=()=>window.innerWidth<=820;
+const easeSai=t=>1-Math.pow(1-t,3);          /* página ganhando velocidade e assentando */
+const easeAssenta=t=>1-Math.pow(1-t,4);      /* pouso mais macio no fim */
+
+function prepara(alvo){
+ if(virando||alvo<0||alvo>=CAPITULOS.length||alvo===atual)return null;
+ const dir=alvo>atual?1:-1;
+ const A=bloco(CAPITULOS[atual],atual),D=bloco(CAPITULOS[alvo],alvo);
+ const modo=ehMovel()?"pagina":"flip";
+ folha.classList.toggle("plana",modo==="pagina");
+ if(modo==="flip"){
+  if(dir>0){poe(flF,A.d,atual+":d");poe(flV,D.e,alvo+":e");poe(pgD,D.d,alvo+":d");}
+  else{poe(flF,D.d,alvo+":d");poe(flV,A.e,atual+":e");poe(pgE,D.e,alvo+":e");}
+ }else{
+  /* página única: a folha sai girando pela lombada e a nova assenta por cima */
+  poe(flF,A.d,atual+":d");
+  poe(pgD,D.d,alvo+":d");
+ }
+ virando=true;
+ G={alvo,dir,modo,A,D,W:palco.clientWidth*(modo==="flip"?0.55:0.8),p:0,face:"A"};
+ aplicaP(0);
+ folha.classList.add("viva");
+ return G;
+}
+
+function aplicaP(p){
+ const g=G;if(!g)return;
+ g.p=p;
+ if(g.modo==="flip"){
+  const ang=g.dir>0?-180*p:-180+180*p;
+  folha.style.transform=`rotateY(${ang}deg)`;
+  const vis=g.dir>0?p:1-p;
+  fsom.style.opacity=(Math.sin(Math.min(vis,.5)*Math.PI)*.9).toFixed(3);
+  fvs.style.opacity=(Math.sin(Math.max(vis-.5,0)*Math.PI)*.9).toFixed(3);
+  vsom.style.opacity=(Math.sin(p*Math.PI)*.5).toFixed(3);
+  vsom.style.transform=g.dir>0?"scaleX(1)":"scaleX(-1)";
+ }else{
+  /* half-flip: 0→½ a página atual levanta até 90°; ½→1 a nova assenta de 90°→0 */
+  const s=g.dir>0?-1:1;
+  let ang;
+  if(p<0.5){
+   if(g.face!=="A"){g.face="A";poe(flF,g.A.d,(atual)+":d");}
+   ang=s*180*p;
+  }else{
+   if(g.face!=="D"){g.face="D";poe(flF,g.D.d,(g.alvo)+":d");}
+   ang=-s*180*(1-p);
+  }
+  folha.style.transform=`rotateY(${ang}deg)`;
+  fsom.style.opacity=(Math.sin(p*Math.PI)*.75).toFixed(3);
+  vsom.style.opacity=(Math.sin(p*Math.PI)*.55).toFixed(3);
+  vsom.style.transform="scaleX(1)";
+ }
+}
+function agenda(p){
+ pPend=p;
+ if(rafId)return;
+ rafId=requestAnimationFrame(()=>{rafId=0;if(G&&pPend!==null){aplicaP(pPend);pPend=null;}});
+}
+
+function finaliza(completa){
+ if(!G)return;
+ const g=G;
+ const fecha=()=>{
+  if(completa){
+   atual=g.alvo;
+   if(g.modo==="flip"){if(g.dir>0)poe(pgE,g.D.e,atual+":e");else poe(pgD,g.D.d,atual+":d");}
+   pintaMapa();
+   if(!jaFolheou){jaFolheou=true;gdica.classList.add("some");}
+  }else{
+   if(g.modo==="flip"){if(g.dir>0)poe(pgD,g.A.d,atual+":d");else poe(pgE,g.A.e,atual+":e");}
+   else poe(pgD,g.A.d,atual+":d");
+  }
+  folha.classList.remove("viva");
+  fsom.style.opacity=0;fvs.style.opacity=0;vsom.style.opacity=0;
+  virando=false;G=null;
+ };
+ if(quieto){aplicaP(completa?1:0);fecha();return;}
+ const p0=g.p,p1=completa?1:0;
+ const restante=Math.abs(p1-p0);
+ const dur=Math.max(180,Math.min(700,Math.round(760*restante+150)));
+ const t0=performance.now();
+ const ease=completa?easeAssenta:easeSai;
+ cancelAnimationFrame(tweenId);
+ (function passo(agora){
+  if(!G||G!==g){return;}
+  const t=Math.min(1,(agora-t0)/dur);
+  aplicaP(p0+(p1-p0)*ease(t));
+  if(t<1)tweenId=requestAnimationFrame(passo);
+  else fecha();
+ })(t0);
+}
+
+window.irCap=dest=>{
+ if(quieto){if(dest>=0&&dest<CAPITULOS.length&&!virando){atual=dest;render();}return;}
+ const g=prepara(dest);
+ if(g)finaliza(true);
+};
+
+/* a última página assenta quando o livro termina de abrir */
+function assenta(){
+ if(quieto||virando)return;
+ const modo=ehMovel()?"pagina":"flip";
+ folha.classList.toggle("plana",modo==="pagina");
+ poe(flF,bloco(CAPITULOS[atual],atual).d,atual+":d");
+ if(modo==="flip")flV.innerHTML="";
+ folha.classList.add("viva");
+ const t0=performance.now(),dur=520,a0=modo==="flip"?-64:-52;
+ virando=true;
+ (function passo(agora){
+  const t=Math.min(1,(agora-t0)/dur);
+  const ang=a0*(1-easeAssenta(t));
+  folha.style.transform=`rotateY(${ang}deg)`;
+  fsom.style.opacity=(Math.sin(Math.min(-ang/90,1)*Math.PI/2)*.8).toFixed(3);
+  vsom.style.opacity=(Math.min(-ang/90,1)*.45).toFixed(3);
+  if(t<1)requestAnimationFrame(passo);
+  else{folha.classList.remove("viva");fsom.style.opacity=0;vsom.style.opacity=0;virando=false;}
+ })(t0);
+}
+
+/* gesto: mouse e toque, com a página seguindo o dedo */
+let P=null;
+palco.addEventListener("pointerdown",e=>{
+ if(virando){P=null;return;}
+ P={x:e.clientX,y:e.clientY,id:e.pointerId,t:performance.now(),cap:false,dx:0};
+},{passive:true});
+
+palco.addEventListener("pointermove",e=>{
+ if(!P)return;
+ const dx=e.clientX-P.x,dy=e.clientY-P.y;
+ P.dx=dx;
+ if(!P.cap){
+  if(Math.abs(dy)>16&&Math.abs(dy)>Math.abs(dx)){P=null;return;}          /* deixa rolar o texto */
+  if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)*1.15){
+   const g=prepara(atual+(dx<0?1:-1));
+   if(!g){P=null;return;}
+   P.cap=true;
+   palco.classList.add("pegando");
+   try{palco.setPointerCapture(P.id);}catch(_){}
+  }else return;
+ }
+ if(P.cap&&G){
+  e.preventDefault();
+  agenda(Math.min(1,Math.max(0,(G.dir>0?-dx:dx)/G.W)));
+ }
+});
+
+function solta(e){
+ palco.classList.remove("pegando");
+ if(!P){return;}
+ if(P.cap&&G){
+  if(pPend!==null){const pu=pPend;pPend=null;aplicaP(pu);}   /* aplica o último movimento antes de decidir */
+  const dt=Math.max(1,performance.now()-P.t);
+  const vel=Math.abs(P.dx)/dt;                       /* px por ms */
+  finaliza(G.p>0.3||(vel>0.45&&G.p>0.06));
+ }
+ P=null;
+}
+palco.addEventListener("pointerup",solta);
+palco.addEventListener("pointercancel",solta);
+palco.addEventListener("lostpointercapture",()=>{palco.classList.remove("pegando");});
+
+window.responderSim=()=>{
+ poe(pgD,`<div class="fim"><div class="cnum" style="justify-content:center">Fim do primeiro livro</div>
+  <div class="ft">Então tá.</div>
+  <div class="fp">Agora a gente começa o segundo — e esse eu quero escrever com você, pelo resto da vida.</div></div>`,"fim:d");
+ poe(pgE,`<div class="rosto"><div class="rl" style="width:50%"><i style="background:var(--lilas)"></i><i style="background:var(--amarelo)"></i><i style="background:var(--verde-l)"></i></div></div>`,"fim:e");
+};
+
+document.addEventListener("keydown",e=>{
+ const noLivro=document.getElementById("livro").classList.contains("on");
+ const noPainel=document.getElementById("painel").classList.contains("on");
+ const naBusca=mdb.classList.contains("on");
+ if(noLivro){
+  if(e.key==="ArrowRight")irCap(atual+1);
+  if(e.key==="ArrowLeft")irCap(atual-1);
+  return;
+ }
+ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();abrirBusca();return;}
+ if(e.key==="Escape"){fecharRegistro();fecharBusca();ddSino.classList.remove("on");}
+ if((e.key==="l"||e.key==="L")&&!noPainel&&!naBusca)abrirLivro();
+});
+
+function ajustaMb(){document.getElementById("btBuscaMb").style.display=window.innerWidth<=760?"grid":"none";}
+ajustaMb();window.addEventListener("resize",ajustaMb);
+</script>
+</body>
+</html>

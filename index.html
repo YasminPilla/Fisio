@@ -1278,14 +1278,7 @@ function bloco(c,i){
    ${c.corpo?`<div class="corpo" style="margin-top:18px">${c.corpo.map(p=>`<p>${p}</p>`).join("")}</div>`:""}
    ${c.fecho?`<div class="cepi" style="margin:18px 0 0;border-left-color:rgba(255,200,0,.6)">${c.fecho}</div>`:""}`;
  }else if(c.tipo==="registro"){
-  const cits=[];
-  if(REG.queixa)cits.push(["Queixa relatada",REG.queixa]);
-  if(REG.evolucao)cits.push(["Evolução da sessão",REG.evolucao]);
-  if(REG.plano)cits.push(["Plano para a próxima sessão",REG.plano]);
-  const bl=cits.length
-   ? cits.map(t=>`<div class="cit"><b>${t[0]}</b><q>${esc(t[1])}</q></div>`).join("")
-   : `<div class="cit"><b>Você deixou em branco</b><q>E tudo bem. O que vem depois vale do mesmo jeito.</q></div>`;
-  miolo=`${bl}<div class="corpo" style="margin-top:16px">${c.depois.map((p,j)=>`<p${j===0?' class="pri"':''}>${p}</p>`).join("")}</div>`;
+  miolo=`<div class="corpo">${c.depois.map((p,j)=>`<p${j===0?' class="pri"':''}>${p}</p>`).join("")}</div>`;
  }else if(c.tipo==="pergunta"){
   miolo=`<div class="corpo">${c.corpo.map((p,j)=>`<p${j===0?' class="pri"':''}>${p}</p>`).join("")}</div>
    <div class="ctit" style="margin:22px 0 0;color:var(--lilas);font-size:clamp(24px,3.6vw,34px)">${LIVRO.pergunta}</div>

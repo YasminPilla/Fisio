@@ -554,6 +554,8 @@ const LIVRO={
   dedicatoria:"Para a esquentadinha que fez uma calma atravessar a cidade."  /* aparece na folha de rosto; deixe "" para omitir */
 };
 
+function diasDesde(iso){return Math.floor((Date.now()-new Date(iso+"T00:00:00"))/864e5);}
+
 const INTERLUDIO=[
   "Obrigada, Ana Clara.",
   "Você acabou de preencher, com todo o cuidado, o registro de uma atleta que não existe.",
@@ -639,15 +641,12 @@ const CAPITULOS=[
 
   {estacao:"números",tipo:"numeros",num:"Intervalo",
    titulo:"Nós duas em números",
-   epigrafe:"Tudo isso aconteceu de verdade. Eu contei.",
-   /* Yasmin: troque os [X] pelos valores reais. Pode apagar linhas,
-      trocar os rótulos ou este capítulo inteiro — o livro se ajusta. */
+   epigrafe:"Tudo isso aconteceu de verdade. Eu não precisei nem contar.",
    numeros:[
-    ["[X]","viagens entre Cotia e o Capão"],
-    ["[X] h","de trajeto somadas"],
-    ["[X]","dias desde a Consolação"],
-    ["[X]","mensagens trocadas"],
-    ["[X]","áudios que eu ouvi mais de uma vez"],
+    ["Incontáveis","viagens entre Cotia e o Capão"],
+    [diasDesde("2025-10-14"),"dias desde a Consolação"],
+    ["Muitas","mensagens trocadas"],
+    ["Vários","áudios que eu ouvi mais de uma vez"],
     ["2","pessoas que quase desistiram e não desistiram"]
    ],
    corpo:[

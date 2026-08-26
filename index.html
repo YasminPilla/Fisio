@@ -360,6 +360,11 @@ input,textarea{font:inherit;color:inherit}
 .corpo em{font-style:italic;color:var(--tinta)}
 .corpo strong{font-weight:500;color:var(--tinta);background:linear-gradient(transparent 62%,rgba(255,200,0,.32) 62%)}
 .orn{text-align:center;color:var(--lilas);opacity:.45;font-size:14px;letter-spacing:.6em;margin-top:18px}
+.chatm{display:flex;flex-direction:column;gap:7px;width:100%;max-width:260px;margin:0 auto}
+.cdata{text-align:center;font-family:"Barlow Condensed",sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-2);margin-bottom:4px}
+.bolha{max-width:80%;padding:8px 13px;border-radius:15px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:12.5px;line-height:1.4}
+.bolha.eu{align-self:flex-end;background:var(--lilas);color:var(--papel);border-bottom-right-radius:4px}
+.bolha.ela{align-self:flex-start;background:rgba(43,21,51,.08);color:var(--tinta);border-bottom-left-radius:4px}
 .folio{margin-top:auto;padding-top:16px;display:flex;align-items:baseline;gap:10px;font-family:"Barlow Condensed",sans-serif;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-2)}
 .folio i{flex:1;height:1px;background:rgba(43,21,51,.1)}
 .cit{background:linear-gradient(180deg,rgba(139,79,168,.07),rgba(139,79,168,.03));border-left:2.5px solid var(--lilas);border-radius:0 6px 6px 0;padding:13px 15px;margin-bottom:11px}
@@ -608,15 +613,24 @@ const CAPITULOS=[
    ],
    fecho:"Eu não sabia, mas aquela corridinha na estação já estava decidindo o nosso futuro."},
 
-  {estacao:"consolação",num:"Capítulo dois",algarismo:"II",
-   titulo:"Sete segundos de coragem",
-   epigrafe:"Estação Consolação · 14 de outubro de 2025.",
-   corpo:[
-     "Eu levei o caminho inteiro ensaiando. Desisti umas três vezes. Cheguei a passar da catraca decidida a não falar nada.",
-     "<strong>[CONTE COMO FOI DE VERDADE]</strong> — o que você falou, a cara que ela fez, se a sua voz tremeu, se você gaguejou. Não tenta deixar bonito. O charme está em ser honesta, não em ser elegante.",
-     "Você me seguiu de volta e eu fiquei olhando pro celular que nem boba, no meio da estação, com gente passando dos dois lados."
+  {estacao:"mensagens",num:"Capítulo dois",algarismo:"II",
+   titulo:"A mesma intenção",
+   epigrafe:"Caminho de casa — o alívio de saber que era mútuo.",
+   chatData:"11 de novembro, 15:06",
+   chat:[
+    {de:"eu",txt:"Oiee, bem??"},
+    {de:"eu",txt:"Foi mal a abordagem aquela hora, mas não sabia como chegar"},
+    {de:"ela",txt:"oi, to bem e vc?"},
+    {de:"ela",txt:"fica tranquila KKKKKKK"},
+    {de:"ela",txt:"já estava planejando chegar em você"},
+    {de:"ela",txt:"só não tinha a oportunidade"}
    ],
-   fecho:"A nossa história inteira coube em sete segundos de coragem numa estação de metrô."},
+   corpo:[
+     "No próprio dia 11, ainda no caminho de volta para casa, peguei o celular e criei coragem para te mandar aquele \"oiee\". Pedi logo desculpas pela abordagem doida na estação, achando que tinha passado a maior vergonha e que você devia ter me achado maluca por ter corrido atrás de você.",
+     "Ainda nem existia sentimento, era só aquela curiosidade grande e a vontade de te conhecer. Mas a sua resposta veio e me pegou de surpresa: \"Fica tranquila KKKKKKK já estava planejando chegar em você, só não tinha a oportunidade.\"",
+     "Eu ali, achando que tinha feito o maior ato de bravura, e na verdade você estava na mesma sintonia, só esperando o momento certo. O receio de ter sido afobada sumiu na hora, dando lugar a um sorriso bobo no meio do transporte público."
+   ],
+   fecho:"Ali eu vi que, mesmo sem saber o que nos esperava, a gente já queria exatamente a mesma coisa."},
 
   {estacao:"distância",num:"Capítulo três",algarismo:"III",
    titulo:"A cidade inteira entre nós",
@@ -1290,10 +1304,14 @@ function bloco(c,i){
     <div class="rd">${LIVRO.autor}</div></div>`};
  }
 
+ const chatHtml=c.chat?`<div class="chatm">${c.chatData?`<div class="cdata">${c.chatData}</div>`:""}
+   ${c.chat.map(m=>`<div class="bolha ${m.de}">${m.txt}</div>`).join("")}</div>`:"";
+
  const cab=`<div class="cnum">${c.num}</div>
   ${c.algarismo?`<div class="calg">${c.algarismo}</div>`:""}
   <div class="ctit">${c.titulo}</div>
   ${c.epigrafe?`<div class="cepi">${c.epigrafe}</div>`:""}
+  ${chatHtml}
   <div class="cest">Estação ${c.estacao}</div>`;
 
  let miolo="";

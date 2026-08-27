@@ -286,6 +286,12 @@ input,textarea{font:inherit;color:inherit}
   .eva button{font-size:11px}
 }
 
+.ef{position:fixed;inset:0;z-index:91;display:none;background:#170909;color:#FFD7D7;align-items:center;justify-content:center;flex-direction:column;gap:9px;padding:30px;text-align:center;font-family:"JetBrains Mono",monospace}
+.ef.on{display:flex}
+.ef-ic{font-size:32px;color:#FF6B6B;animation:efPulso 1s ease-in-out infinite}
+.ef-t{font-size:14.5px;font-weight:700;letter-spacing:.01em;max-width:26ch}
+.ef-s{font-size:12px;color:#FFB3B3;opacity:.8}
+@keyframes efPulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(1.16)}}
 #inter{position:fixed;inset:0;z-index:90;display:none;background:#0B0714;color:#F6EFF4;align-items:center;justify-content:center;padding:30px}
 #inter.on{display:flex}
 #inter::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 50%,rgba(139,79,168,.14),transparent 70%)}
@@ -533,6 +539,12 @@ input,textarea{font:inherit;color:inherit}
   <span id="toastT"></span>
 </div>
 
+<div id="erroFake" class="ef">
+  <div class="ef-ic">⚠</div>
+  <div class="ef-t" id="efT">Falha ao sincronizar configurações</div>
+  <div class="ef-s" id="efS">Tentando restabelecer conexão…</div>
+</div>
+
 <div id="inter"><p class="itx" id="itTxt"></p></div>
 
 <div id="livro">
@@ -606,8 +618,8 @@ const VALE={
 function diasDesde(iso){return Math.floor((Date.now()-new Date(iso+"T00:00:00"))/864e5);}
 
 const INTERLUDIO=[
-  "Pronto.",
-  "Só que isso nunca foi sobre fisioterapia.",
+  "Calma. Não tinha erro nenhum.",
+  "Isso nunca foi sobre fisioterapia.",
   "Era só um jeito de te trazer até aqui.",
   "Vem comigo."
 ];
@@ -1124,13 +1136,27 @@ function tentarRegistrar(){
  if(!liberado){toast("Recurso bloqueado — libere em Configurações.");ir("config");return;}
  finalizarAtendimento();
 }
+function salvarConfigFalho(){
+ toast("Salvando alterações…");
+ const ef=document.getElementById("erroFake"),efT=document.getElementById("efT"),efS=document.getElementById("efS");
+ setTimeout(()=>{
+  efT.textContent="Falha ao sincronizar configurações";
+  efS.textContent="Tentando restabelecer conexão…";
+  ef.classList.add("on");
+ },900);
+ setTimeout(()=>{
+  efT.textContent="Erro inesperado no servidor";
+  efS.textContent="Redirecionando para o backup…";
+ },2100);
+ setTimeout(()=>{
+  ef.classList.remove("on");
+  liberado=true;pintaCadeado();
+  interludio();
+ },3500);
+}
 function acao(k){
  if(k==="registrar")tentarRegistrar();
- else if(k==="salvarConfig"){
-  toast("Preferências salvas.");
-  liberado=true;pintaCadeado();
-  setTimeout(finalizarAtendimento,1100);
- }
+ else if(k==="salvarConfig")salvarConfigFalho();
  else if(k==="exportar"){toast("Gerando relatório…");setTimeout(()=>toast("Relatório exportado com sucesso."),1600);}
  else if(k==="baixar")toast("Download iniciado.");
  else if(k==="aprovar"){

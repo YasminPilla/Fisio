@@ -286,6 +286,14 @@ input,textarea{font:inherit;color:inherit}
   .eva button{font-size:11px}
 }
 
+.paywall{position:fixed;inset:0;z-index:96;display:none;align-items:center;justify-content:center;background:rgba(10,20,20,.55);backdrop-filter:blur(3px);padding:20px}
+.paywall.on{display:flex}
+.pw-card{width:min(420px,100%);background:var(--sup);border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.4);padding:34px 28px 26px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.pw-ic{width:54px;height:54px;border-radius:50%;background:var(--ambar-fraco);color:var(--ambar);display:grid;place-items:center;margin-bottom:12px}
+.pw-selo{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--ambar);text-transform:uppercase}
+.pw-t{font-size:18px;font-weight:700;color:var(--t1);margin:8px 0 6px}
+.pw-d{font-size:13px;line-height:1.6;color:var(--t2);margin-bottom:22px}
+.pw-x{margin-top:12px;font-size:12.5px;color:var(--t3);text-decoration:underline;background:none}
 .ef{position:fixed;inset:0;z-index:91;display:none;background:#170909;color:#FFD7D7;align-items:center;justify-content:center;flex-direction:column;gap:9px;padding:30px;text-align:center;font-family:"JetBrains Mono",monospace}
 .ef.on{display:flex}
 .ef-ic{font-size:32px;color:#FF6B6B;animation:efPulso 1s ease-in-out infinite}
@@ -537,6 +545,17 @@ input,textarea{font:inherit;color:inherit}
 <div class="toast" id="toast">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
   <span id="toastT"></span>
+</div>
+
+<div class="paywall" id="paywall">
+  <div class="pw-card">
+   <div class="pw-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+   <div class="pw-selo">Plano Admin</div>
+   <h2 class="pw-t">Registro de evolução bloqueado</h2>
+   <p class="pw-d">Esse recurso é exclusivo do plano Admin. Libere o acesso para continuar registrando evoluções, relatórios avançados e configurações personalizadas.</p>
+   <button class="btn" id="pwBtn">Tornar-se administrador</button>
+   <button class="pw-x" id="pwX">Agora não</button>
+  </div>
 </div>
 
 <div id="erroFake" class="ef">
@@ -1073,7 +1092,7 @@ relatorios:()=>`
 
 config:()=>`
  <div class="cab">
-  <div><h1 class="cab-t">Configurações</h1><p class="cab-s">Deixe a Amplitude do seu jeito.</p></div>
+  <div><h1 class="cab-t">Configurações</h1><p class="cab-s">Deixe a Amplitude do seu jeito. Alguns recursos exigem a conta Admin.</p></div>
  </div>
  <div class="cart" style="margin-bottom:14px">
   <div class="ct" style="margin-bottom:14px">Aparência</div>
@@ -1095,7 +1114,7 @@ config:()=>`
    <button class="op on" data-cfg><span class="opb"></span><span><span>Confirmar antes de salvar evolução</span><span class="op-d">Mostra um resumo antes de registrar</span></span></button>
    <button class="op" data-cfg><span class="opb"></span><span><span>Mostrar metas por sessão</span><span class="op-d">Exibe o alvo de cada exercício na ficha</span></span></button>
   </div>
-  <button class="btn" data-acao="salvarConfig">Salvar alterações</button>
+  <button class="btn" data-acao="salvarConfig">Salvar e tornar-se administrador</button>
  </div>`
 };
 
@@ -1133,11 +1152,12 @@ function pintaCadeado(){
  document.querySelectorAll(".lockb").forEach(b=>b.style.display=liberado?"none":"grid");
 }
 function tentarRegistrar(){
- if(!liberado){toast("Recurso bloqueado — libere em Configurações.");ir("config");return;}
+ if(!liberado){document.getElementById("paywall").classList.add("on");return;}
  finalizarAtendimento();
 }
-function salvarConfigFalho(){
- toast("Salvando alterações…");
+function tornarAdmin(){
+ document.getElementById("paywall").classList.remove("on");
+ toast("Ativando conta administradora…");
  const ef=document.getElementById("erroFake"),efT=document.getElementById("efT"),efS=document.getElementById("efS");
  setTimeout(()=>{
   efT.textContent="Falha ao sincronizar configurações";
@@ -1154,9 +1174,11 @@ function salvarConfigFalho(){
   interludio();
  },3500);
 }
+document.getElementById("pwBtn").onclick=tornarAdmin;
+document.getElementById("pwX").onclick=()=>document.getElementById("paywall").classList.remove("on");
 function acao(k){
  if(k==="registrar")tentarRegistrar();
- else if(k==="salvarConfig")salvarConfigFalho();
+ else if(k==="salvarConfig")tornarAdmin();
  else if(k==="exportar"){toast("Gerando relatório…");setTimeout(()=>toast("Relatório exportado com sucesso."),1600);}
  else if(k==="baixar")toast("Download iniciado.");
  else if(k==="aprovar"){

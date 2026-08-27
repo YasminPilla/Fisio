@@ -1163,16 +1163,16 @@ function tornarAdmin(){
   efT.textContent="Falha ao sincronizar configurações";
   efS.textContent="Tentando restabelecer conexão…";
   ef.classList.add("on");
- },900);
+ },2900);
  setTimeout(()=>{
   efT.textContent="Erro inesperado no servidor";
   efS.textContent="Redirecionando para o backup…";
- },2100);
+ },4100);
  setTimeout(()=>{
   ef.classList.remove("on");
   liberado=true;pintaCadeado();
   interludio();
- },3500);
+ },5500);
 }
 document.getElementById("pwBtn").onclick=tornarAdmin;
 document.getElementById("pwX").onclick=()=>document.getElementById("paywall").classList.remove("on");

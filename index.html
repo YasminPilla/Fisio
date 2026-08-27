@@ -423,7 +423,7 @@ input,textarea{font:inherit;color:inherit}
 .fim{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
 .ft{font-family:"Gloock",Georgia,serif;font-size:clamp(32px,5vw,46px);line-height:1;letter-spacing:-.025em}
 .fp{font-style:italic;font-weight:300;font-size:16px;line-height:1.6;color:#3A2242;max-width:30ch}
-.vale{margin-top:16px;width:min(320px,86vw);border-radius:22px;padding:28px 24px 20px;background:linear-gradient(165deg,rgba(139,79,168,.26),rgba(217,164,65,.1) 55%,rgba(139,79,168,.2));border:1px solid rgba(217,164,65,.4);position:relative;text-align:center;box-shadow:0 16px 40px rgba(43,21,51,.35),0 0 0 1px rgba(255,255,255,.03) inset;animation:valeAparece .8s cubic-bezier(.22,1,.36,1) both}
+.vale{margin-top:16px;width:min(320px,86vw);border-radius:22px;padding:28px 24px 20px;background:linear-gradient(165deg,rgba(139,79,168,.42),rgba(92,46,117,.24) 55%,rgba(139,79,168,.36));border:1px solid rgba(139,79,168,.5);position:relative;text-align:center;box-shadow:0 16px 40px rgba(43,21,51,.35),0 0 0 1px rgba(255,255,255,.03) inset;animation:valeAparece .8s cubic-bezier(.22,1,.36,1) both}
 .vale::before{content:"♥";position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:32px;height:32px;border-radius:50%;background:linear-gradient(150deg,#EAC576,#B9832E);display:flex;align-items:center;justify-content:center;font-size:14px;color:#3B1B4E;box-shadow:0 6px 16px rgba(0,0,0,.4);animation:valePulso 2.6s ease-in-out infinite}
 .vale-r{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ouro);margin-top:6px}
 .vale-t{font-family:"Gloock",Georgia,serif;font-size:21px;margin:9px 0 8px;color:var(--tinta)}
@@ -595,10 +595,10 @@ const VALE={
 function diasDesde(iso){return Math.floor((Date.now()-new Date(iso+"T00:00:00"))/864e5);}
 
 const INTERLUDIO=[
-  "Obrigada, Ana Clara.",
-  "Você acabou de preencher, com todo o cuidado, o registro de uma atleta que não existe.",
-  "É desse jeito que você cuida de tudo. É desse jeito que você cuida de mim.",
-  "Só que esse sistema nunca foi sobre fisioterapia."
+  "Pronto.",
+  "Você acabou de preencher a ficha de uma atleta que não existe.",
+  "Não importa o que você escreveu ali — nada daquilo era real.",
+  "Esse sistema nunca foi sobre fisioterapia."
 ];
 
 const CAPITULOS=[
@@ -688,16 +688,17 @@ const CAPITULOS=[
    titulo:"Nós duas em números",
    epigrafe:"Tudo isso aconteceu de verdade. Eu não precisei nem contar.",
    numeros:[
-    ["Incontáveis","viagens entre Cotia e o Capão"],
+    ["Poucos","encontros presenciais — mas o suficiente pra marcar tudo"],
+    ["2","vezes em que seus dias foram nas nossas barracas (você em Cotia com os primos e eu de surpresa no Capão pra levar o buquê)"],
     [diasDesde("2025-10-14"),"dias desde a Consolação"],
-    ["Muitas","mensagens trocadas"],
-    ["Vários","áudios que eu ouvi mais de uma vez"],
-    ["2","pessoas que quase desistiram e não desistiram"]
+    ["Infinitas","mensagens e ligações pra encurtar a distância"],
+    ["Vários","áudios seus que eu ouvi mais de uma vez só pra ouvir sua voz"],
+    ["2","pessoas que, mesmo de longe, nunca desistiram"]
    ],
    corpo:[
-    "Nenhum desses números explica nada sozinho. Mas somados, eles contam a mesma coisa que este livro inteiro: eu escolhi, muitas vezes, e escolheria tudo de novo."
+    "Nenhum desses números explica nada sozinho. Mas somados, eles contam a mesma coisa que este livro inteiro: eu escolhi você, e escolheria tudo de novo."
    ],
-   fecho:"O que a gente repete todos os dias diz mais do que o que a gente jura uma vez."},
+   fecho:"O que a gente sente e constrói todos os dias diz muito mais do que a quantidade de vezes que a gente se vê."},
 
   {estacao:"as voltas",num:"Capítulo sete",algarismo:"VII",
    titulo:"As idas e as voltas",

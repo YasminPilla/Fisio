@@ -596,8 +596,8 @@ function diasDesde(iso){return Math.floor((Date.now()-new Date(iso+"T00:00:00"))
 
 const INTERLUDIO=[
   "Pronto.",
-  "Você acabou de preencher a ficha de uma atleta que não existe.",
-  "Não importa o que você escreveu ali — nada daquilo era real.",
+  "Você acabou de encerrar o atendimento de uma atleta que não existe.",
+  "Nada daquilo era real.",
   "Esse sistema nunca foi sobre fisioterapia."
 ];
 
@@ -1076,7 +1076,7 @@ document.addEventListener("click",e=>{
  if(a)acao(a.dataset.acao);
 });
 function acao(k){
- if(k==="registrar")abrirRegistro();
+ if(k==="registrar")finalizarAtendimento();
  else if(k==="exportar"){toast("Gerando relatório…");setTimeout(()=>toast("Relatório exportado com sucesso."),1600);}
  else if(k==="baixar")toast("Download iniciado.");
  else if(k==="aprovar"){
@@ -1238,7 +1238,17 @@ function fecharRegistro(){
  document.getElementById("painel").classList.remove("on");
  document.body.style.overflow="";
 }
-document.getElementById("btRegistro").onclick=abrirRegistro;
+function finalizarAtendimento(){
+ const btn=document.getElementById("btRegistro");
+ if(btn.disabled)return;
+ btn.disabled=true;
+ setTimeout(()=>{
+  btn.disabled=false;
+  toast(`Evolução registrada — ${ATLETAS[sel].n}.`);
+  setTimeout(interludio,2900);
+ },700);
+}
+document.getElementById("btRegistro").onclick=finalizarAtendimento;
 document.getElementById("pFechar").onclick=fecharRegistro;
 document.getElementById("veu").onclick=()=>{fecharRegistro();fecharBusca();};
 pVoltar.onclick=()=>{if(ps>0){ps--;pinta();}};
